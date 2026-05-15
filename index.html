@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FERMAT — Fashion AI made for you</title>
+<meta name="description" content="A generative AI studio for fashion. Turn sketches, materials and moodboards into high-fidelity renders in minutes." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+
+<header class="nav" id="top">
+  <a href="#top" class="wordmark">FERMAT<span class="dot">.</span></a>
+  <nav class="nav-links">
+    <a href="#features">Product</a>
+    <a href="#studio">Studio</a>
+    <a href="#how">How it works</a>
+    <a href="https://github.com/dpanshusingh/works-for-me" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+  <div class="nav-actions">
+    <button class="btn ghost" id="open-settings" type="button">API key</button>
+    <a href="#studio" class="btn solid">Open Studio</a>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="hero-inner reveal">
+      <p class="eyebrow">Generative AI for fashion &amp; luxury</p>
+      <h1>Fashion AI<br />made for you.</h1>
+      <p class="lede">
+        Turn sketches, materials, moodboards and graphics into stunning,
+        high-fidelity renders — in hours, not months. Design, iterate and
+        visualise an entire collection without a photoshoot.
+      </p>
+      <div class="hero-cta">
+        <a href="#studio" class="btn solid lg">Start creating</a>
+        <a href="#features" class="btn line lg">See what it does</a>
+      </div>
+      <div class="trust">
+        <span>Built for</span>
+        <em>Design</em><em>Merchandising</em><em>Marketing</em><em>E-commerce</em>
+      </div>
+    </div>
+    <div class="hero-art reveal" aria-hidden="true">
+      <div class="art-card a"></div>
+      <div class="art-card b"></div>
+      <div class="art-card c"></div>
+      <div class="grain"></div>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <div class="section-head reveal">
+      <p class="eyebrow">The toolbox</p>
+      <h2>Every step of the design loop, accelerated.</h2>
+    </div>
+
+    <div class="feature-grid">
+      <article class="feature reveal">
+        <div class="f-num">01</div>
+        <h3>Sketch&nbsp;→&nbsp;render</h3>
+        <p>Upload a hand-drawn or digital sketch and get a photorealistic
+        product render that respects your silhouette and design lines.</p>
+      </article>
+      <article class="feature reveal">
+        <div class="f-num">02</div>
+        <h3>Apply material &amp; print</h3>
+        <p>Drop any colour, texture, fabric or positional print onto a garment
+        while keeping its construction intact.</p>
+      </article>
+      <article class="feature reveal">
+        <div class="f-num">03</div>
+        <h3>Virtual try-on</h3>
+        <p>Put tops, bottoms and accessories on different models and settings —
+        faster and cheaper than a 3D pipeline or a shoot.</p>
+      </article>
+      <article class="feature reveal">
+        <div class="f-num">04</div>
+        <h3>Seamless tiles</h3>
+        <p>Generate perfectly tileable textile prints from a moodboard and see
+        them rendered on cloth instantly.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ FUNCTIONAL STUDIO ============ -->
+  <section class="studio" id="studio">
+    <div class="section-head reveal">
+      <p class="eyebrow">The Studio · live</p>
+      <h2>Make something now.</h2>
+      <p class="section-sub">Pick a mode, drop an image, describe the look.
+      Generations run in your browser using your own image-model API key.</p>
+    </div>
+
+    <div class="studio-shell reveal">
+      <div class="modes" role="tablist" aria-label="Studio modes">
+        <button class="mode active" data-mode="sketch" role="tab">Sketch → render</button>
+        <button class="mode" data-mode="material" role="tab">Apply material</button>
+        <button class="mode" data-mode="tryon" role="tab">Virtual try-on</button>
+        <button class="mode" data-mode="tile" role="tab">Seamless tile</button>
+        <button class="mode" data-mode="text" role="tab">Text → design</button>
+      </div>
+
+      <div class="studio-body">
+        <div class="panel input-panel">
+          <label class="drop" id="drop" for="file">
+            <input type="file" id="file" accept="image/png,image/jpeg,image/webp" hidden />
+            <div class="drop-empty" id="drop-empty">
+              <div class="drop-icon">⤓</div>
+              <strong>Drop an image</strong>
+              <span>or click to browse · PNG, JPG, WEBP</span>
+              <span class="drop-hint" id="drop-hint">Optional for “Text → design”</span>
+            </div>
+            <img id="preview" alt="Source preview" hidden />
+            <button type="button" class="clear-img" id="clear-img" hidden aria-label="Remove image">✕</button>
+          </label>
+
+          <label class="field">
+            <span>Describe the look</span>
+            <textarea id="prompt" rows="4" placeholder="e.g. matte black technical wool, oversized cocoon coat, soft studio light, editorial"></textarea>
+          </label>
+
+          <div class="field-row">
+            <label class="field">
+              <span>Aspect</span>
+              <select id="size">
+                <option value="1024x1024">Square · 1024</option>
+                <option value="1024x1536">Portrait · 2:3</option>
+                <option value="1536x1024">Landscape · 3:2</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Quality</span>
+              <select id="quality">
+                <option value="high">High</option>
+                <option value="medium" selected>Medium</option>
+                <option value="low">Low (fast)</option>
+              </select>
+            </label>
+          </div>
+
+          <button class="btn solid lg full" id="generate" type="button">
+            <span class="gen-label">Generate</span>
+            <span class="spinner" hidden></span>
+          </button>
+          <p class="status" id="status" role="status"></p>
+        </div>
+
+        <div class="panel output-panel">
+          <div class="canvas" id="canvas">
+            <div class="canvas-empty" id="canvas-empty">
+              <div class="ce-mark">F.</div>
+              <p>Your render appears here.</p>
+            </div>
+            <img id="result" alt="Generated render" hidden />
+          </div>
+          <div class="result-actions" id="result-actions" hidden>
+            <a class="btn line" id="download" download="fermat-render.png">Download</a>
+            <button class="btn ghost" id="reuse" type="button">Use as input</button>
+          </div>
+          <div class="history" id="history" aria-label="Recent renders"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="how" id="how">
+    <div class="section-head reveal">
+      <p class="eyebrow">How it works</p>
+      <h2>Private by design.</h2>
+      <p class="section-sub">This is a static client-side replica. Your API key
+      and images never touch a server we control — requests go straight from
+      your browser to your image-model provider, and the key is kept in this
+      browser’s local storage only.</p>
+    </div>
+    <ol class="steps reveal">
+      <li><span>1</span> Add your image-model API key (the “API key” button, top right).</li>
+      <li><span>2</span> Choose a mode and drop a sketch, garment or moodboard.</li>
+      <li><span>3</span> Describe the material, finish or scene you want.</li>
+      <li><span>4</span> Generate, download, and feed the result back in to iterate.</li>
+    </ol>
+  </section>
+
+  <section class="cta reveal">
+    <h2>From idea to render<br />before the coffee’s cold.</h2>
+    <a href="#studio" class="btn solid lg">Open the Studio</a>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <span class="wordmark sm">FERMAT<span class="dot">.</span></span>
+  <p>Personal replica · not affiliated with Fermat. Built for learning.</p>
+</footer>
+
+<!-- Settings modal -->
+<div class="modal" id="settings" hidden>
+  <div class="modal-card">
+    <button class="modal-x" id="close-settings" aria-label="Close">✕</button>
+    <h3>Image model API key</h3>
+    <p class="modal-sub">Default provider: OpenAI Images (<code>gpt-image-1</code>).
+    The key is stored only in this browser (localStorage) and is sent directly
+    to the provider. Don’t use this on a shared machine.</p>
+    <label class="field">
+      <span>API key</span>
+      <input type="password" id="api-key" placeholder="sk-..." autocomplete="off" />
+    </label>
+    <label class="field">
+      <span>API base URL</span>
+      <input type="text" id="api-base" placeholder="https://api.openai.com/v1" />
+    </label>
+    <div class="modal-actions">
+      <button class="btn ghost" id="clear-key" type="button">Clear</button>
+      <button class="btn solid" id="save-key" type="button">Save</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>
