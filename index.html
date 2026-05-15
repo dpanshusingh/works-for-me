@@ -125,13 +125,15 @@
             <textarea id="prompt" rows="4" placeholder="e.g. matte black technical wool, oversized cocoon coat, soft studio light, editorial"></textarea>
           </label>
 
+          <div class="chips" id="chips" aria-label="Quick material presets"></div>
+
           <div class="field-row">
             <label class="field">
               <span>Aspect</span>
-              <select id="size">
-                <option value="1024x1024">Square · 1024</option>
-                <option value="1024x1536">Portrait · 2:3</option>
-                <option value="1536x1024">Landscape · 3:2</option>
+              <select id="aspect">
+                <option value="square">Square · 1:1</option>
+                <option value="portrait" selected>Portrait · 2:3</option>
+                <option value="landscape">Landscape · 3:2</option>
               </select>
             </label>
             <label class="field">
@@ -140,6 +142,14 @@
                 <option value="high">High</option>
                 <option value="medium" selected>Medium</option>
                 <option value="low">Low (fast)</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Variations</span>
+              <select id="count">
+                <option value="1" selected>1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
               </select>
             </label>
           </div>
@@ -158,10 +168,20 @@
               <p>Your render appears here.</p>
             </div>
             <img id="result" alt="Generated render" hidden />
+            <img id="compare-img" alt="Source for comparison" hidden />
+          </div>
+          <div class="compare-wrap" id="compare-wrap" hidden>
+            <span>Input</span>
+            <input type="range" id="compare" min="0" max="100" value="50" aria-label="Before / after slider" />
+            <span>Render</span>
           </div>
           <div class="result-actions" id="result-actions" hidden>
             <a class="btn line" id="download" download="fermat-render.png">Download</a>
             <button class="btn ghost" id="reuse" type="button">Use as input</button>
+          </div>
+          <div class="history-head">
+            <span>Recent renders</span>
+            <button class="linkbtn" id="clear-history" type="button">Clear</button>
           </div>
           <div class="history" id="history" aria-label="Recent renders"></div>
         </div>
@@ -200,19 +220,30 @@
 
 <!-- Settings modal -->
 <div class="modal" id="settings" hidden>
-  <div class="modal-card">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-label="Provider settings">
     <button class="modal-x" id="close-settings" aria-label="Close">✕</button>
-    <h3>Image model API key</h3>
-    <p class="modal-sub">Default provider: OpenAI Images (<code>gpt-image-1</code>).
-    The key is stored only in this browser (localStorage) and is sent directly
-    to the provider. Don’t use this on a shared machine.</p>
+    <h3>Connect an image model</h3>
+    <p class="modal-sub" id="modal-sub">Keys are stored only in this browser
+    (localStorage) and sent directly to the provider. Don’t use this on a
+    shared machine.</p>
+    <label class="field">
+      <span>Provider</span>
+      <select id="provider">
+        <option value="gemini" selected>Google Gemini</option>
+        <option value="openai">OpenAI</option>
+      </select>
+    </label>
     <label class="field">
       <span>API key</span>
-      <input type="password" id="api-key" placeholder="sk-..." autocomplete="off" />
+      <input type="password" id="api-key" placeholder="paste your key" autocomplete="off" />
+    </label>
+    <label class="field">
+      <span>Model</span>
+      <input type="text" id="api-model" placeholder="gemini-2.5-flash-image" autocomplete="off" />
     </label>
     <label class="field">
       <span>API base URL</span>
-      <input type="text" id="api-base" placeholder="https://api.openai.com/v1" />
+      <input type="text" id="api-base" autocomplete="off" />
     </label>
     <div class="modal-actions">
       <button class="btn ghost" id="clear-key" type="button">Clear</button>

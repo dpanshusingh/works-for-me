@@ -153,7 +153,14 @@ section{padding:clamp(64px,9vw,140px) clamp(20px,5vw,72px)}
 
 .field{display:flex;flex-direction:column;gap:8px}
 .field>span{font-size:12px;font-weight:600;letter-spacing:.04em;color:#9b988f}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  background:#0d0d0f;border:1px solid #2c2c30;color:#cfccc3;
+  font:600 12px/1 "Inter",sans-serif;padding:8px 12px;border-radius:999px;cursor:pointer;
+  transition:border-color .15s,color .15s;
+}
+.chip:hover{border-color:var(--accent);color:var(--paper)}
 textarea,select,#api-key,#api-base{
   width:100%;background:#0d0d0f;border:1px solid #2c2c30;color:var(--paper);
   border-radius:10px;padding:12px 14px;font:500 14px/1.4 "Inter",sans-serif;resize:vertical;
@@ -179,10 +186,22 @@ select{appearance:none;cursor:pointer}
 }
 .canvas-empty{text-align:center;color:#56544d}
 .ce-mark{font-family:"Fraunces",serif;font-size:46px;color:#2f2f33;margin-bottom:6px}
-#result{width:100%;height:100%;object-fit:contain}
+#result,#compare-img{width:100%;height:100%;object-fit:contain}
+#compare-img{position:absolute;inset:0;pointer-events:none;background:
+  repeating-conic-gradient(#161618 0 25%,#121214 0 50%) 50%/26px 26px;}
+.compare-wrap{display:flex;align-items:center;gap:12px;font-size:11px;
+  letter-spacing:.08em;text-transform:uppercase;color:#8a877f}
+.compare-wrap[hidden]{display:none}
+.compare-wrap input[type=range]{flex:1;accent-color:var(--accent);cursor:ew-resize}
+.btn.busy{background:var(--accent);color:var(--accent-ink)}
 .result-actions{display:flex;gap:10px}
 .result-actions .btn{flex:1;border-color:#3a3a40;color:var(--paper)}
 .result-actions .btn:hover{background:var(--paper);color:var(--ink)}
+.history-head{display:flex;justify-content:space-between;align-items:center;
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#6f6c64}
+.linkbtn{background:none;border:none;color:#9b988f;font:600 12px "Inter",sans-serif;
+  cursor:pointer;text-transform:none;letter-spacing:0}
+.linkbtn:hover{color:var(--accent)}
 .history{display:flex;gap:8px;flex-wrap:wrap;min-height:4px}
 .history img{
   width:54px;height:54px;object-fit:cover;border-radius:8px;cursor:pointer;
@@ -222,7 +241,10 @@ select{appearance:none;cursor:pointer}
 .modal-sub code{background:color-mix(in srgb,var(--ink) 8%,transparent);padding:1px 6px;border-radius:5px}
 .modal-card .field{margin-bottom:16px}
 .modal-card .field>span{color:var(--muted)}
-.modal-card input{background:#fff;border-color:color-mix(in srgb,var(--ink) 18%,transparent);color:var(--ink)}
+.modal-card input,.modal-card select{
+  background:#fff;border-color:color-mix(in srgb,var(--ink) 18%,transparent);color:var(--ink)
+}
+.modal-card code{background:color-mix(in srgb,var(--ink) 8%,transparent);padding:1px 6px;border-radius:5px}
 .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:8px}
 .modal-x{position:absolute;top:16px;right:16px;background:none;border:none;font-size:16px;cursor:pointer;color:var(--muted)}
 .modal-x:hover{color:var(--accent)}
