@@ -8,12 +8,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@500;700&family=Noto+Serif+Bengali:wght@700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f6f3ec; --card:#fffdf8; --ink:#1d1a16; --muted:#6b6459; --line:#e4ded2;
-    --accent:#b8362b; --accent-soft:#f7ddd9; --good:#2f7d4f; --ok:#c78a12; --bad:#b8362b;
+    --bg:#f2f3f0; --card:#fbfcfa; --ink:#15192b; --muted:#5f6577; --line:#d9dde3;
+    --accent:#2f4aa8; --accent-soft:#dfe5f7; --good:#2f7d4f; --ok:#c78a12; --bad:#b8362b;
     --bn:'Noto Sans Bengali','Noto Serif Bengali','Vrinda','Bangla Sangam MN','Shonar Bangla',sans-serif;
   }
+  :root[data-theme="dark"]{--bg:#13161f;--card:#1b1f2b;--ink:#eceef4;--muted:#9aa1b5;--line:#2c3140;--accent:#8ea2ec;--accent-soft:#25304f}
   @media (prefers-color-scheme:dark){
-    :root:not([data-theme="light"]){--bg:#171512;--card:#1f1c18;--ink:#f1ece2;--muted:#a59d90;--line:#332e27;--accent:#e2604f;--accent-soft:#3d2320}
+    :root:not([data-theme="light"]){--bg:#13161f;--card:#1b1f2b;--ink:#eceef4;--muted:#9aa1b5;--line:#2c3140;--accent:#8ea2ec;--accent-soft:#25304f}
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -39,7 +40,7 @@
   .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
   button.b{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:9px;font-weight:600;cursor:pointer}
   button.b:hover{border-color:var(--muted)}
-  button.b.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  button.b.primary{background:var(--accent);border-color:var(--accent);color:var(--card)}
   button.b:disabled{opacity:.5;cursor:default}
   .pad{position:relative;width:100%;aspect-ratio:1/1;border-radius:14px;background:var(--card);border:1px solid var(--line);overflow:hidden;touch-action:none}
   .pad canvas{position:absolute;inset:0;width:100%;height:100%}
