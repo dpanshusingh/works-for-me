@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bornomala</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@500;700&family=Noto+Serif+Bengali:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f3ec; --card:#fffdf8; --ink:#1d1a16; --muted:#6b6459; --line:#e4ded2;
+    --accent:#b8362b; --accent-soft:#f7ddd9; --good:#2f7d4f; --ok:#c78a12; --bad:#b8362b;
+    --bn:'Noto Sans Bengali','Noto Serif Bengali','Vrinda','Bangla Sangam MN','Shonar Bangla',sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){--bg:#171512;--card:#1f1c18;--ink:#f1ece2;--muted:#a59d90;--line:#332e27;--accent:#e2604f;--accent-soft:#3d2320}
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  header{display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  header h1{font:700 22px/1 var(--bn);margin:0}
+  header h1 span{font:500 13px/1 system-ui;color:var(--muted);margin-left:8px}
+  .tabs{display:flex;gap:4px;background:var(--line);padding:3px;border-radius:10px;margin-left:auto}
+  .tabs button{border:0;background:transparent;color:var(--muted);padding:6px 14px;border-radius:8px;font-weight:600;cursor:pointer}
+  .tabs button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+  main{display:grid;grid-template-columns:minmax(220px,300px) minmax(320px,420px);gap:20px;justify-content:center;padding:20px;max-width:1100px;margin:0 auto}
+  @media (max-width:720px){main{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .glyph{font:700 130px/1.1 var(--bn);text-align:center;min-height:150px;display:flex;align-items:center;justify-content:center}
+  .glyph.hidden{color:transparent;text-shadow:none}
+  .glyph.hidden::after{content:"?";color:var(--muted);font:500 60px system-ui}
+  .meta{text-align:center}
+  .meta .name{font-size:22px;font-weight:700}
+  .meta .name .bn{font-family:var(--bn)}
+  .meta .sound{color:var(--muted);margin-top:2px}
+  .meta .word{margin-top:12px;font-family:var(--bn);font-size:24px}
+  .meta .gloss{color:var(--muted);font-size:14px}
+  .meta .hint{margin-top:12px;font-size:13px;color:var(--muted);border-top:1px dashed var(--line);padding-top:10px}
+  .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+  button.b{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:9px;font-weight:600;cursor:pointer}
+  button.b:hover{border-color:var(--muted)}
+  button.b.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  button.b:disabled{opacity:.5;cursor:default}
+  .pad{position:relative;width:100%;aspect-ratio:1/1;border-radius:14px;background:var(--card);border:1px solid var(--line);overflow:hidden;touch-action:none}
+  .pad canvas{position:absolute;inset:0;width:100%;height:100%}
+  .pad .guides{pointer-events:none}
+  #ink{cursor:crosshair}
+  .verdict{min-height:58px;text-align:center;margin-top:12px}
+  .verdict .score{font-size:34px;font-weight:800;line-height:1}
+  .verdict .msg{color:var(--muted);font-size:14px;margin-top:4px}
+  .good{color:var(--good)} .ok{color:var(--ok)} .bad{color:var(--bad)}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+  .counter{color:var(--muted);font-size:13px}
+  section.grid{max-width:1100px;margin:0 auto 40px;padding:0 20px}
+  section.grid h2{font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:18px 0 8px}
+  .letters{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:6px}
+  .letters button{font:700 28px/1 var(--bn);padding:10px 0;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;position:relative}
+  .letters button.cur{outline:2px solid var(--accent);outline-offset:1px}
+  .letters button i{position:absolute;bottom:3px;left:0;right:0;height:3px;border-radius:2px;background:transparent}
+  .letters button.s3 i{background:var(--good)} .letters button.s2 i{background:var(--ok)} .letters button.s1 i{background:var(--bad)}
+  .foot{max-width:1100px;margin:0 auto 30px;padding:0 20px;color:var(--muted);font-size:13px}
+  kbd{border:1px solid var(--line);border-radius:4px;padding:0 5px;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <h1>বর্ণমালা <span>Bornomala · Bangla letter trainer</span></h1>
+  <div class="tabs" id="modes">
+    <button data-mode="trace" class="on">Trace</button>
+    <button data-mode="write">Write</button>
+    <button data-mode="recall">Recall</button>
+  </div>
+</header>
+
+<main>
+  <div class="card">
+    <div class="glyph" id="glyph"></div>
+    <div class="meta">
+      <div class="name"><span class="bn" id="bnName"></span> <span id="roman"></span></div>
+      <div class="sound" id="sound"></div>
+      <div class="word" id="word"></div>
+      <div class="gloss" id="gloss"></div>
+      <div class="hint" id="hint"></div>
+    </div>
+    <div class="row">
+      <button class="b" id="speak" title="Uses your browser's Bangla voice if it has one">🔊 Hear it</button>
+      <button class="b" id="peek">👁 Peek</button>
+    </div>
+  </div>
+
+  <div>
+    <div class="pad" id="padWrap">
+      <canvas id="guides" class="guides" width="360" height="360"></canvas>
+      <canvas id="ghost" class="guides" width="360" height="360"></canvas>
+      <canvas id="ink" width="360" height="360"></canvas>
+    </div>
+    <div class="row">
+      <button class="b" id="undo">Undo</button>
+      <button class="b" id="clear">Clear</button>
+      <button class="b primary" id="check">Check ✓</button>
+    </div>
+    <div class="verdict" id="verdict"></div>
+    <div class="nav">
+      <button class="b" id="prev">← Prev</button>
+      <span class="counter" id="counter"></span>
+      <button class="b" id="next">Next →</button>
+    </div>
+  </div>
+</main>
+
+<section class="grid" id="grid"></section>
+<div class="foot">
+  Keys: <kbd>←</kbd> <kbd>→</kbd> letters · <kbd>Enter</kbd> check · <kbd>Backspace</kbd> undo · <kbd>Esc</kbd> clear · <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> modes.
+  Progress is saved in this browser. Colour bar under a letter = your best score in the current mode.
+</div>
+
+<script>
+// ---------- Letter data ----------
+// name: Bangla name of the letter; r: romanisation; s: sound note; w: example word; g: gloss; h: writing hint
+const V = [
+ ['অ','অ','ô','like the "o" in "hot" (Bangla’s inherent vowel)','অজগর','ôjôgôr · python (snake)','Left hook first, then the tall stem, then the matra (top line) last.'],
+ ['আ','আ','a','"aa" as in "father"','আম','am · mango','Same as অ plus a second vertical stroke on the right.'],
+ ['ই','ই','i','short "i" as in "bit"','ইঁদুর','indur · mouse','Curly body first, matra last.'],
+ ['ঈ','ঈ','ī','long "ee" — in modern speech identical to ই','ঈগল','igôl · eagle','ই with an extra tail on the right.'],
+ ['উ','উ','u','"u" as in "put"','উট','ut · camel','Small hook, then the body, then the matra.'],
+ ['ঊ','ঊ','ū','long "oo" — same sound as উ today','ঊষা','usha · dawn','উ with a tail underneath.'],
+ ['ঋ','ঋ','ri','"ri" — only in Sanskrit loans','ঋষি','rishi · sage','Body first, then the small loop.'],
+ ['এ','এ','e','"e" as in "bed" (sometimes "æ" as in "cat")','একতারা','æktara · one-string instrument','One sweeping curve, then the matra.'],
+ ['ঐ','ঐ','oi','"oi" as in "boy"','ঐরাবত','oirabôt · Indra’s elephant','এ plus a hook on top-left.'],
+ ['ও','ও','o','"o" as in "go"','ওল','ol · yam','Left part like ৩, then the vertical bar.'],
+ ['ঔ','ঔ','ou','"ou" as in "bowl"','ঔষধ','oushôdh · medicine','ও with the extra hook on top-left.'],
+];
+const C = [
+ ['ক','ক','kô','k','কলা','kôla · banana','Bowl on the left, vertical stem, then matra.'],
+ ['খ','খ','khô','aspirated k (with a puff of air)','খরগোশ','khôrgosh · rabbit',''],
+ ['গ','গ','gô','g','গরু','goru · cow','Open on the bottom-right, unlike ণ.'],
+ ['ঘ','ঘ','ghô','aspirated g','ঘর','ghôr · house',''],
+ ['ঙ','ঙ','ngô','"ng" as in "sing" — never starts a word','ব্যাঙ','bæng · frog','Looks like ড with a dot inside.'],
+ ['চ','চ','chô','"ch" as in "church" (unaspirated)','চাঁদ','chand · moon',''],
+ ['ছ','ছ','chhô','aspirated ch','ছাতা','chhata · umbrella',''],
+ ['জ','জ','jô','j','জল','jôl · water',''],
+ ['ঝ','ঝ','jhô','aspirated j','ঝড়','jhôr · storm',''],
+ ['ঞ','ঞ','nyô','"ny" — rare, mostly in conjuncts like জ্ঞ','মিঞা','miya · mister','Two loops on the left, then the stem.'],
+ ['ট','ট','ṭô','retroflex t (tongue curled back)','টমেটো','tômeto · tomato',''],
+ ['ঠ','ঠ','ṭhô','aspirated retroflex t','ঠোঁট','thõt · lip',''],
+ ['ড','ড','ḍô','retroflex d','ডিম','dim · egg',''],
+ ['ঢ','ঢ','ḍhô','aspirated retroflex d','ঢোল','dhol · drum',''],
+ ['ণ','ণ','ṇô','"n" — same sound as ন in modern Bangla','হরিণ','horin · deer','Closed loop on the right, unlike গ.'],
+ ['ত','ত','tô','dental t (tongue on the teeth)','তারা','tara · star',''],
+ ['থ','থ','thô','aspirated dental t','থালা','thala · plate',''],
+ ['দ','দ','dô','dental d','দই','doi · yogurt',''],
+ ['ধ','ধ','dhô','aspirated dental d','ধান','dhan · paddy',''],
+ ['ন','ন','nô','n','নদী','nodi · river',''],
+ ['প','প','pô','p','পাখি','pakhi · bird',''],
+ ['ফ','ফ','phô','aspirated p, often "f" in speech','ফুল','phul · flower',''],
+ ['ব','ব','bô','b (also used for "w/v" sounds)','বই','boi · book',''],
+ ['ভ','ভ','bhô','aspirated b','ভাত','bhat · cooked rice',''],
+ ['ম','ম','mô','m','মাছ','machh · fish',''],
+ ['য','য','jô','"j" (historically "y") — same sound as জ','যব','jôb · barley','Like ষ without the crossbar; the dot below makes it য়.'],
+ ['র','র','rô','r (tapped)','রাত','rat · night','A ব with a dot underneath.'],
+ ['ল','ল','lô','l','লেবু','lebu · lemon',''],
+ ['শ','শ','shô','"sh" — palatal','শাক','shak · leafy greens',''],
+ ['ষ','ষ','shô','"sh" — retroflex, same sound as শ today','ষাঁড়','shãr · bull','Like য with a crossbar.'],
+ ['স','স','sô','"sh" in most words, "s" in some clusters','সাপ','shap · snake',''],
+ ['হ','হ','hô','h','হাতি','hati · elephant',''],
+ ['ড়','ড়','ṛô','retroflex flap, like the Hindi ड़','গাড়ি','gari · car','ড with a dot underneath.'],
+ ['ঢ়','ঢ়','ṛhô','aspirated flap, like Hindi ढ़','আষাঢ়','ashaṛh · a monsoon month','ঢ with a dot underneath.'],
+ ['য়','য়','yô','"y" as in "yes" (or a glide)','সময়','sômôy · time','য with a dot underneath.'],
+ ['ৎ','ৎ','t','"khôndo tô" — final t with no vowel','হঠাৎ','hôthat · suddenly',''],
+ ['ং','ং','ng','"onusshor" — nasal "ng" after a vowel','রং','rông · colour',''],
+ ['ঃ','ঃ','ḥ','"bishôrgo" — doubles the next consonant / faint h','দুঃখ','dukkho · sorrow',''],
+ ['ঁ','ঁ','~','"chôndrobindu" — nasalises the vowel','চাঁদ','chand · moon','Sits above the letter it nasalises.'],
+];
+const D = [['০','শূন্য','shunno','zero'],['১','এক','æk','one'],['২','দুই','dui','two'],['৩','তিন','tin','three'],['৪','চার','char','four'],
+           ['৫','পাঁচ','pãch','five'],['৬','ছয়','chhôy','six'],['৭','সাত','shat','seven'],['৮','আট','at','eight'],['৯','নয়','nôy','nine']];
+
+const LETTERS = [
+  ...V.map(x=>({ch:x[0],name:x[1],r:x[2],s:x[3],w:x[4],g:x[5],h:x[6],grp:'স্বরবর্ণ · Vowels'})),
+  ...C.map(x=>({ch:x[0],name:x[1],r:x[2],s:x[3],w:x[4],g:x[5],h:x[6],grp:'ব্যঞ্জনবর্ণ · Consonants'})),
+  ...D.map(x=>({ch:x[0],name:x[1],r:x[2],s:'digit '+x[3],w:x[1],g:x[2]+' · '+x[3],h:'',grp:'সংখ্যা · Digits'})),
+];
+
+// ---------- State ----------
+const N=128, MARGIN=12, DIL=3, CANVAS=360;
+let idx=0, mode='trace', strokes=[], cur=null, peeking=false;
+let progress = {};
+try{ progress = JSON.parse(localStorage.getItem('bornomala.v1')||'{}'); }catch(e){}
+const save=()=>{ try{ localStorage.setItem('bornomala.v1',JSON.stringify(progress)); }catch(e){} };
+
+// ---------- DOM ----------
+const $=id=>document.getElementById(id);
+const ink=$('ink'), ictx=ink.getContext('2d'), ghost=$('ghost'), gctx=ghost.getContext('2d'), guides=$('guides');
+ictx.lineCap='round'; ictx.lineJoin='round'; ictx.lineWidth=11;
+
+// ---------- Templates (rendered from the font, normalised into an N×N box) ----------
+const templates = new Map(); // ch -> {mask, dil, count, img}
+function bbox(data,w,h){
+  let x0=w,y0=h,x1=-1,y1=-1;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){ if(data[(y*w+x)*4+3]>60){ if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y; } }
+  return x1<0?null:{x0,y0,x1,y1};
+}
+function fitInto(src,bb,dst){ // draw bb region of src scaled to fit dst (N×N) with margin, aspect kept
+  const dctx=dst.getContext('2d'); dctx.clearRect(0,0,N,N);
+  const bw=bb.x1-bb.x0+1, bh=bb.y1-bb.y0+1, box=N-2*MARGIN, sc=Math.min(box/bw,box/bh);
+  const dw=bw*sc, dh=bh*sc;
+  dctx.drawImage(src,bb.x0,bb.y0,bw,bh,(N-dw)/2,(N-dh)/2,dw,dh);
+  return dctx.getImageData(0,0,N,N).data;
+}
+function maskFrom(data){
+  const m=new Uint8Array(N*N); let c=0;
+  for(let i=0;i<N*N;i++){ if(data[i*4+3]>90){m[i]=1;c++;} }
+  return {m,c};
+}
+function dilate(m){
+  const d=new Uint8Array(N*N);
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){ if(!m[y*N+x])continue;
+    for(let dy=-DIL;dy<=DIL;dy++){const yy=y+dy; if(yy<0||yy>=N)continue;
+      for(let dx=-DIL;dx<=DIL;dx++){const xx=x+dx; if(xx<0||xx>=N)continue; d[yy*N+xx]=1;}}}
+  return d;
+}
+const big=document.createElement('canvas'); big.width=big.height=320;
+const norm=document.createElement('canvas'); norm.width=norm.height=N;
+function buildTemplate(ch){
+  const b=big.getContext('2d'); b.clearRect(0,0,320,320);
+  b.fillStyle='#000'; b.font="700 170px 'Noto Sans Bengali','Noto Serif Bengali',sans-serif"; b.textBaseline='middle'; b.textAlign='center';
+  b.fillText(ch,160,165);
+  const bb=bbox(b.getImageData(0,0,320,320).data,320,320); if(!bb)return null;
+  const data=fitInto(big,bb,norm);
+  const {m,c}=maskFrom(data);
+  const img=document.createElement('canvas'); img.width=img.height=N; img.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(data),N,N),0,0);
+  return {mask:m,dil:dilate(m),count:c,img};
+}
+async function buildAll(){
+  try{ await document.fonts.load("700 170px 'Noto Sans Bengali'"); }catch(e){}
+  await document.fonts.ready;
+  for(const L of LETTERS) templates.set(L.ch,buildTemplate(L.ch));
+}
+
+// ---------- Scoring ----------
+function compare(userMask,userCount,userDil,t){
+  if(!userCount||!t) return {score:0,P:0,R:0};
+  let hitP=0,hitR=0;
+  for(let i=0;i<N*N;i++){ if(userMask[i]&&t.dil[i])hitP++; if(t.mask[i]&&userDil[i])hitR++; }
+  const P=hitP/userCount, R=hitR/t.count;
+  const f=(P+R)?2*P*R/(P+R):0;
+  return {score:Math.round(f*100),P,R};
+}
+function userMasks(normalise){
+  const data=ictx.getImageData(0,0,CANVAS,CANVAS).data;
+  const bb=bbox(data,CANVAS,CANVAS); if(!bb)return null;
+  let d;
+  if(normalise){ d=fitInto(ink,bb,norm); }
+  else { const c=norm.getContext('2d'); c.clearRect(0,0,N,N); c.drawImage(ink,0,0,N,N); d=c.getImageData(0,0,N,N).data; }
+  const {m,c}=maskFrom(d); return {m,c,dil:dilate(m),bb};
+}
+function check(){
+  const L=LETTERS[idx], t=templates.get(L.ch), v=$('verdict');
+  const u=userMasks(mode!=='trace');
+  if(!u){ v.innerHTML='<div class="msg">Draw something first.</div>'; return; }
+  const res=compare(u.m,u.c,u.dil,t);
+  let best=null;
+  if(mode!=='trace'){ // recognition pass: which letter does this most resemble?
+    for(const M of LETTERS){ const r=compare(u.m,u.c,u.dil,templates.get(M.ch)); if(!best||r.score>best.score)best={ch:M.ch,score:r.score}; }
+  }
+  const wrong = best && best.ch!==L.ch && best.score>res.score;
+  if(wrong) res.score=Math.min(res.score,55);
+  const cls=res.score>=85?'good':res.score>=65?'ok':'bad';
+  let msg = wrong ? 'That reads as <b style="font-family:var(--bn)">'+best.ch+'</b>, not '+L.ch+'. '
+          : res.score>=85?'Excellent — that is a clean '+L.ch+'.' : res.score>=65?'Good shape. ' : 'Not there yet. ';
+  if(res.score<85){
+    if(res.R<0.75) msg+='Part of the letter is missing — compare with the model. ';
+    if(res.P<0.75) msg+='Some strokes wander off the letter. ';
+    if(mode==='trace'&&res.score<65) msg+='Follow the grey guide more closely.';
+  }
+  v.innerHTML='<div class="score '+cls+'">'+res.score+'%</div><div class="msg">'+msg+'</div>';
+  const p=progress[L.ch]||(progress[L.ch]={}); if((p[mode]||0)<res.score){p[mode]=res.score;save();}
+  paintGrid();
+  if(mode==='recall'&&res.score<85){ showGhost(0.18); }
+}
+
+// ---------- Drawing ----------
+function pos(e){ const r=ink.getBoundingClientRect(); return [(e.clientX-r.left)*CANVAS/r.width,(e.clientY-r.top)*CANVAS/r.height]; }
+ink.addEventListener('pointerdown',e=>{ ink.setPointerCapture(e.pointerId); cur=[pos(e)]; });
+ink.addEventListener('pointermove',e=>{ if(!cur)return; const p=pos(e); const q=cur[cur.length-1]; cur.push(p);
+  ictx.strokeStyle=getComputedStyle(document.body).getPropertyValue('--ink'); ictx.beginPath(); ictx.moveTo(q[0],q[1]); ictx.lineTo(p[0],p[1]); ictx.stroke(); });
+const end=()=>{ if(!cur)return; if(cur.length===1){ const p=cur[0]; ictx.beginPath(); ictx.arc(p[0],p[1],5,0,7); ictx.fillStyle=ictx.strokeStyle; ictx.fill(); } strokes.push(cur); cur=null; };
+ink.addEventListener('pointerup',end); ink.addEventListener('pointercancel',end);
+function redraw(){ ictx.clearRect(0,0,CANVAS,CANVAS); ictx.strokeStyle=getComputedStyle(document.body).getPropertyValue('--ink');
+  for(const s of strokes){ if(s.length===1){ictx.beginPath();ictx.arc(s[0][0],s[0][1],5,0,7);ictx.fillStyle=ictx.strokeStyle;ictx.fill();continue;}
+    ictx.beginPath(); ictx.moveTo(s[0][0],s[0][1]); for(const p of s)ictx.lineTo(p[0],p[1]); ictx.stroke(); } }
+function clearPad(){ strokes=[]; ictx.clearRect(0,0,CANVAS,CANVAS); $('verdict').innerHTML=''; }
+function drawGuides(){ const c=guides.getContext('2d'); c.clearRect(0,0,CANVAS,CANVAS); c.strokeStyle=getComputedStyle(document.body).getPropertyValue('--line'); c.lineWidth=1; c.setLineDash([6,6]);
+  for(const y of [CANVAS*0.5]){ c.beginPath(); c.moveTo(0,y); c.lineTo(CANVAS,y); c.stroke(); }
+  for(const x of [CANVAS*0.5]){ c.beginPath(); c.moveTo(x,0); c.lineTo(x,CANVAS); c.stroke(); }
+  c.setLineDash([]); c.strokeRect(CANVAS*MARGIN/N,CANVAS*MARGIN/N,CANVAS*(N-2*MARGIN)/N,CANVAS*(N-2*MARGIN)/N); }
+function showGhost(alpha){ const t=templates.get(LETTERS[idx].ch); gctx.clearRect(0,0,CANVAS,CANVAS); if(!t||!alpha)return;
+  gctx.globalAlpha=alpha; gctx.imageSmoothingEnabled=true; gctx.drawImage(t.img,0,0,CANVAS,CANVAS); gctx.globalAlpha=1; }
+
+// ---------- UI ----------
+function render(){
+  const L=LETTERS[idx];
+  $('glyph').textContent=L.ch; $('glyph').classList.toggle('hidden',mode==='recall'&&!peeking);
+  $('bnName').textContent=L.name; $('roman').textContent='— '+L.r; $('sound').textContent=L.s;
+  $('word').textContent=L.w; $('gloss').textContent=L.g; $('hint').textContent=L.h||'Body first, then the matra (top line). Keep the matra straight and level.';
+  $('counter').textContent=(idx+1)+' / '+LETTERS.length+' · '+L.grp;
+  clearPad(); showGhost(mode==='trace'?0.28:0); drawGuides(); paintGrid();
+}
+function paintGrid(){
+  const g=$('grid'); if(!g.dataset.built){ let html=''; let grp='';
+    LETTERS.forEach((L,i)=>{ if(L.grp!==grp){ grp=L.grp; html+=(i?'</div>':'')+'<h2>'+grp+'</h2><div class="letters">'; } html+='<button data-i="'+i+'">'+L.ch+'<i></i></button>'; });
+    g.innerHTML=html+'</div>'; g.dataset.built=1;
+    g.addEventListener('click',e=>{ const b=e.target.closest('button'); if(b){ idx=+b.dataset.i; peeking=false; render(); window.scrollTo({top:0,behavior:'smooth'}); } });
+  }
+  g.querySelectorAll('button').forEach(b=>{ const L=LETTERS[+b.dataset.i], s=(progress[L.ch]||{})[mode]||0;
+    b.className=(+b.dataset.i===idx?'cur ':'')+(s>=85?'s3':s>=65?'s2':s>0?'s1':''); });
+}
+function setMode(m){ mode=m; peeking=false; document.querySelectorAll('#modes button').forEach(b=>b.classList.toggle('on',b.dataset.mode===m)); render(); }
+$('modes').addEventListener('click',e=>{ const b=e.target.closest('button'); if(b)setMode(b.dataset.mode); });
+$('check').onclick=check; $('clear').onclick=clearPad;
+$('undo').onclick=()=>{ strokes.pop(); redraw(); };
+$('next').onclick=()=>{ idx=(idx+1)%LETTERS.length; peeking=false; render(); };
+$('prev').onclick=()=>{ idx=(idx+LETTERS.length-1)%LETTERS.length; peeking=false; render(); };
+$('peek').onclick=()=>{ peeking=!peeking; $('glyph').classList.toggle('hidden',mode==='recall'&&!peeking); showGhost(mode==='trace'?0.28:(peeking?0.15:0)); };
+$('speak').onclick=()=>{ const L=LETTERS[idx]; if(!('speechSynthesis' in window))return;
+  const u=new SpeechSynthesisUtterance(L.name.length>1?L.name:L.w); const v=speechSynthesis.getVoices().find(v=>/^bn/i.test(v.lang));
+  if(v)u.voice=v; u.lang='bn-IN'; u.rate=0.85; speechSynthesis.cancel(); speechSynthesis.speak(u);
+  if(!v)$('speak').title='No Bangla voice installed in this browser — install one in your OS speech settings.'; };
+document.addEventListener('keydown',e=>{ if(e.target.tagName==='INPUT')return;
+  if(e.key==='ArrowRight')$('next').click(); else if(e.key==='ArrowLeft')$('prev').click();
+  else if(e.key==='Enter')check(); else if(e.key==='Backspace'){e.preventDefault();$('undo').click();}
+  else if(e.key==='Escape')clearPad(); else if(e.key==='1')setMode('trace'); else if(e.key==='2')setMode('write'); else if(e.key==='3')setMode('recall'); });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{drawGuides();redraw();});
+
+render();
+$('check').disabled=true; $('verdict').innerHTML='<div class="msg">Loading the Bangla font…</div>';
+buildAll().then(()=>{ $('check').disabled=false; $('verdict').innerHTML=''; render(); });
+</script>
+</body>
+</html>
