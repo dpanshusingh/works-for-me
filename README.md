@@ -97,3 +97,16 @@ describing the shot to look for (also used as the image's alt text).
 
 Any Node.js host that runs Next.js works; on Vercel, import the repository and set the environment
 variables above.
+
+### GitHub Pages (static preview)
+
+```bash
+npm run build:pages   # static site in out/, served from /works-for-me
+```
+
+Publish the contents of `out/` to the `gh-pages` branch and set **Settings → Pages → Build and
+deployment → Deploy from a branch → `gh-pages` / root**. The site is then at
+`https://dpanshusingh.github.io/works-for-me/`. Set `PAGES_BASE_PATH` if the repository is renamed.
+
+GitHub Pages only serves static files, so `POST /api/requests` (and the webhook) is left out of
+this build: forms validate as usual and go straight to the WhatsApp hand-off.

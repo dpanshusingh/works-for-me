@@ -20,6 +20,8 @@ export async function postRequest(
   reference: string,
   data: unknown,
 ): Promise<PostResult> {
+  // Static hosting (GitHub Pages) has no API — WhatsApp is the only channel.
+  if (process.env.NEXT_PUBLIC_STATIC_EXPORT === "true") return { ok: false, forwarded: false };
   try {
     const res = await fetch("/api/requests", {
       method: "POST",
