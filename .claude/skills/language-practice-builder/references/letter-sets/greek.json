@@ -1,0 +1,492 @@
+{
+ "title": "Alphabetos",
+ "heading": "Ἀλφάβητος",
+ "subtitle": "Alphabetos · Greek letter trainer",
+ "font_link": "https://fonts.googleapis.com/css2?family=GFS+Didot&family=Noto+Serif:wght@400;700&display=swap",
+ "font_stack": "'GFS Didot','Noto Serif','Palatino Linotype',Georgia,serif",
+ "speech_lang": "el-GR",
+ "storage_key": "alphabetos.v1",
+ "default_hint": "Greek capitals are built from straight strokes; lowercase from one continuous loop where possible.",
+ "letters": [
+  {
+   "ch": "Α",
+   "name": "άλφα",
+   "r": "Alpha",
+   "s": "a as in father",
+   "w": "ἀνήρ",
+   "g": "anēr · man",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Β",
+   "name": "βῆτα",
+   "r": "Beta",
+   "s": "b (v in modern Greek)",
+   "w": "βίος",
+   "g": "bios · life",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Γ",
+   "name": "γάμμα",
+   "r": "Gamma",
+   "s": "hard g",
+   "w": "γῆ",
+   "g": "gē · earth",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Δ",
+   "name": "δέλτα",
+   "r": "Delta",
+   "s": "d (th in modern Greek)",
+   "w": "δῶρον",
+   "g": "dōron · gift",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Ε",
+   "name": "ἒ ψιλόν",
+   "r": "Epsilon",
+   "s": "short e as in bed",
+   "w": "ἔργον",
+   "g": "ergon · work",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Ζ",
+   "name": "ζῆτα",
+   "r": "Zeta",
+   "s": "zd / z",
+   "w": "ζωή",
+   "g": "zōē · life",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Η",
+   "name": "ἦτα",
+   "r": "Eta",
+   "s": "long e as in air",
+   "w": "ἡμέρα",
+   "g": "hēmera · day",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Θ",
+   "name": "θῆτα",
+   "r": "Theta",
+   "s": "th as in thin",
+   "w": "θεός",
+   "g": "theos · god",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Ι",
+   "name": "ἰῶτα",
+   "r": "Iota",
+   "s": "i as in machine",
+   "w": "ἱερός",
+   "g": "hieros · sacred",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Κ",
+   "name": "κάππα",
+   "r": "Kappa",
+   "s": "k",
+   "w": "καρδία",
+   "g": "kardia · heart",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Λ",
+   "name": "λάμβδα",
+   "r": "Lambda",
+   "s": "l",
+   "w": "λόγος",
+   "g": "logos · word, reason",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Μ",
+   "name": "μῦ",
+   "r": "Mu",
+   "s": "m",
+   "w": "μήτηρ",
+   "g": "mētēr · mother",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Ν",
+   "name": "νῦ",
+   "r": "Nu",
+   "s": "n",
+   "w": "νόμος",
+   "g": "nomos · law",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Ξ",
+   "name": "ξῖ",
+   "r": "Xi",
+   "s": "x as in axe",
+   "w": "ξένος",
+   "g": "xenos · stranger, guest",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Ο",
+   "name": "ὂ μικρόν",
+   "r": "Omicron",
+   "s": "short o",
+   "w": "ὁδός",
+   "g": "hodos · road",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Π",
+   "name": "πῖ",
+   "r": "Pi",
+   "s": "p",
+   "w": "πόλις",
+   "g": "polis · city",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Ρ",
+   "name": "ῥῶ",
+   "r": "Rho",
+   "s": "rolled r",
+   "w": "ῥῆμα",
+   "g": "rhēma · word, verb",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Σ",
+   "name": "σῖγμα",
+   "r": "Sigma",
+   "s": "s",
+   "w": "σοφία",
+   "g": "sophia · wisdom",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Τ",
+   "name": "ταῦ",
+   "r": "Tau",
+   "s": "t",
+   "w": "τέχνη",
+   "g": "technē · craft",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Υ",
+   "name": "ὖ ψιλόν",
+   "r": "Upsilon",
+   "s": "French u / German ü",
+   "w": "ὕδωρ",
+   "g": "hydōr · water",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Φ",
+   "name": "φῖ",
+   "r": "Phi",
+   "s": "ph as in uphill, later f",
+   "w": "φίλος",
+   "g": "philos · friend",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Χ",
+   "name": "χῖ",
+   "r": "Chi",
+   "s": "ch as in Scottish loch",
+   "w": "χείρ",
+   "g": "cheir · hand",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Ψ",
+   "name": "ψῖ",
+   "r": "Psi",
+   "s": "ps as in lapse",
+   "w": "ψυχή",
+   "g": "psychē · soul",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "Ω",
+   "name": "ὦ μέγα",
+   "r": "Omega",
+   "s": "long o as in saw",
+   "w": "ὥρα",
+   "g": "hōra · hour, season",
+   "h": "",
+   "grp": "Κεφαλαῖα · Capitals"
+  },
+  {
+   "ch": "α",
+   "name": "άλφα",
+   "r": "alpha",
+   "s": "a as in father",
+   "w": "ἀνήρ",
+   "g": "anēr · man",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "β",
+   "name": "βῆτα",
+   "r": "beta",
+   "s": "b (v in modern Greek)",
+   "w": "βίος",
+   "g": "bios · life",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "γ",
+   "name": "γάμμα",
+   "r": "gamma",
+   "s": "hard g",
+   "w": "γῆ",
+   "g": "gē · earth",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "δ",
+   "name": "δέλτα",
+   "r": "delta",
+   "s": "d (th in modern Greek)",
+   "w": "δῶρον",
+   "g": "dōron · gift",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "ε",
+   "name": "ἒ ψιλόν",
+   "r": "epsilon",
+   "s": "short e as in bed",
+   "w": "ἔργον",
+   "g": "ergon · work",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "ζ",
+   "name": "ζῆτα",
+   "r": "zeta",
+   "s": "zd / z",
+   "w": "ζωή",
+   "g": "zōē · life",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "η",
+   "name": "ἦτα",
+   "r": "eta",
+   "s": "long e as in air",
+   "w": "ἡμέρα",
+   "g": "hēmera · day",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "θ",
+   "name": "θῆτα",
+   "r": "theta",
+   "s": "th as in thin",
+   "w": "θεός",
+   "g": "theos · god",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "ι",
+   "name": "ἰῶτα",
+   "r": "iota",
+   "s": "i as in machine",
+   "w": "ἱερός",
+   "g": "hieros · sacred",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "κ",
+   "name": "κάππα",
+   "r": "kappa",
+   "s": "k",
+   "w": "καρδία",
+   "g": "kardia · heart",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "λ",
+   "name": "λάμβδα",
+   "r": "lambda",
+   "s": "l",
+   "w": "λόγος",
+   "g": "logos · word, reason",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "μ",
+   "name": "μῦ",
+   "r": "mu",
+   "s": "m",
+   "w": "μήτηρ",
+   "g": "mētēr · mother",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "ν",
+   "name": "νῦ",
+   "r": "nu",
+   "s": "n",
+   "w": "νόμος",
+   "g": "nomos · law",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "ξ",
+   "name": "ξῖ",
+   "r": "xi",
+   "s": "x as in axe",
+   "w": "ξένος",
+   "g": "xenos · stranger, guest",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "ο",
+   "name": "ὂ μικρόν",
+   "r": "omicron",
+   "s": "short o",
+   "w": "ὁδός",
+   "g": "hodos · road",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "π",
+   "name": "πῖ",
+   "r": "pi",
+   "s": "p",
+   "w": "πόλις",
+   "g": "polis · city",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "ρ",
+   "name": "ῥῶ",
+   "r": "rho",
+   "s": "rolled r",
+   "w": "ῥῆμα",
+   "g": "rhēma · word, verb",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "σ",
+   "name": "σῖγμα",
+   "r": "sigma",
+   "s": "s",
+   "w": "σοφία",
+   "g": "sophia · wisdom",
+   "h": "Final sigma is ς at the end of a word.",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "τ",
+   "name": "ταῦ",
+   "r": "tau",
+   "s": "t",
+   "w": "τέχνη",
+   "g": "technē · craft",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "υ",
+   "name": "ὖ ψιλόν",
+   "r": "upsilon",
+   "s": "French u / German ü",
+   "w": "ὕδωρ",
+   "g": "hydōr · water",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "φ",
+   "name": "φῖ",
+   "r": "phi",
+   "s": "ph as in uphill, later f",
+   "w": "φίλος",
+   "g": "philos · friend",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "χ",
+   "name": "χῖ",
+   "r": "chi",
+   "s": "ch as in Scottish loch",
+   "w": "χείρ",
+   "g": "cheir · hand",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "ψ",
+   "name": "ψῖ",
+   "r": "psi",
+   "s": "ps as in lapse",
+   "w": "ψυχή",
+   "g": "psychē · soul",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  },
+  {
+   "ch": "ω",
+   "name": "ὦ μέγα",
+   "r": "omega",
+   "s": "long o as in saw",
+   "w": "ὥρα",
+   "g": "hōra · hour, season",
+   "h": "",
+   "grp": "Μικρά · Lowercase"
+  }
+ ]
+}
