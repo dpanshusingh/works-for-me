@@ -1,0 +1,1012 @@
+<title>Quire Page Proof</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Charis+SIL:ital,wght@0,400;0,700;1,400;1,700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=IBM+Plex+Mono:wght@400;500&family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap">
+<style>
+:root{
+  --paper:#E4E2DB; --panel:#D9D7D0; --ink:#262523; --ink-2:#5F5E5B; --rule:#C8C6BF;
+  --wash:#C3C1B9; --marker:#E3D98A; --flash-soft:#73726E;
+  --grain:.03; --grain-inv:0; --grain-blend:multiply;
+  --font:"Literata", Georgia, serif; --size:19px; --weight:400; --leading:1.55; --measure:64; --margin:56px;
+  --ui:"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#1B1A19; --panel:#201F1E; --ink:#B6B3AC; --ink-2:#86847F; --rule:#2C2B29;
+    --wash:#302F2C; --marker:#5A4F22; --flash-soft:#686763; --grain-inv:1; --grain-blend:screen;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#1B1A19; --panel:#201F1E; --ink:#B6B3AC; --ink-2:#86847F; --rule:#2C2B29;
+  --wash:#302F2C; --marker:#5A4F22; --flash-soft:#686763; --grain-inv:1; --grain-blend:screen;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.45 var(--ui);overflow:hidden}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+::selection{background:var(--wash);color:var(--ink)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* ---------- App frame ---------- */
+.app{height:100%;display:grid;grid-template-columns:minmax(0,1fr) auto}
+
+/* ---------- Reader ---------- */
+.reader{
+  position:relative;min-width:0;height:100%;overflow:hidden;background:var(--paper);
+  display:grid;grid-template-rows:auto minmax(0,1fr) auto;row-gap:14px;
+  padding-block:16px 14px;padding-inline:max(16px, min(var(--margin), 8vw));
+  cursor:default;touch-action:pinch-zoom;
+}
+.runhead,.folio{justify-self:center;width:var(--col-px,100%);max-width:100%}
+.runhead{display:flex;align-items:center;gap:12px;min-height:32px;font-family:var(--font);font-style:italic;font-size:13px;color:var(--ink-2)}
+.rh-title{flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rh-sec{flex:0 1 auto;max-width:55%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tune-btn{flex:none;font-style:normal;padding:6px 11px}
+[data-panel="open"] .tune-btn{display:none}
+[data-chrome="hide"] .runhead,[data-chrome="hide"] .folio{visibility:hidden}
+
+.viewport{
+  position:relative;justify-self:center;width:min(calc(var(--measure) * 1ch), 100%);height:100%;overflow:hidden;
+  font-family:var(--font);font-size:var(--size);line-height:var(--leading);font-weight:var(--weight);
+  color:var(--ink);font-kerning:normal;font-optical-sizing:auto;font-variant-ligatures:common-ligatures;
+}
+.flow{position:absolute;top:0;left:0;width:100%;height:100%;margin:0;column-fill:auto;z-index:1}
+.ghost{z-index:0;pointer-events:none;user-select:none;visibility:hidden;opacity:0}
+.ghost.on{visibility:visible;opacity:.075}
+.ghost mark.hl{background:none!important;text-decoration:none!important}
+
+.grain{
+  position:absolute;inset:0;z-index:3;pointer-events:none;opacity:var(--grain);
+  mix-blend-mode:var(--grain-blend);filter:invert(var(--grain-inv));background-size:220px 220px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 -.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+.flash{position:absolute;inset:0;z-index:5;pointer-events:none;opacity:0;background:var(--ink)}
+.flash.on{opacity:1}
+
+.folio{display:grid;gap:8px;font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.folio-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.progress{position:relative;height:2px;background:var(--rule)}
+.progress span{position:absolute;inset:0 auto 0 0;width:0;background:var(--ink-2)}
+@media (max-width:600px){.folio-keys,.rh-title{display:none}.rh-sec{flex:1 1 auto;max-width:none}}
+
+/* ---------- Typeset text ---------- */
+.align-ragged{text-align:left;-webkit-hyphens:manual;hyphens:manual}
+.align-justify{text-align:justify;-webkit-hyphens:manual;hyphens:manual}
+.align-hyphen{text-align:justify;-webkit-hyphens:auto;hyphens:auto;hyphenate-limit-chars:6 3 2}
+
+.flow p,.flow li{text-wrap:pretty;orphans:2;widows:2}
+.flow > header{break-after:avoid;margin-bottom:2em}
+.flow .doc-kicker{margin:0 0 1.3em;font-family:var(--ui);font-size:.6em;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);text-indent:0}
+.flow h1{margin:0 0 .45em;font-size:1.72em;line-height:1.14;letter-spacing:-.012em;font-weight:calc(var(--weight) + 220);text-align:left;hyphens:manual;text-wrap:balance}
+.flow .doc-sub{margin:0;font-style:italic;color:var(--ink-2);text-align:left;hyphens:manual;text-wrap:balance;text-indent:0}
+.flow h2{margin:2.1em 0 .7em;font-size:1.26em;line-height:1.24;font-weight:calc(var(--weight) + 200);text-align:left;hyphens:manual;text-wrap:balance;break-after:avoid;break-inside:avoid}
+.flow h3{margin:1.5em 0 .35em;font-size:1em;line-height:var(--leading);font-style:italic;font-weight:calc(var(--weight) + 90);text-align:left;hyphens:manual;break-after:avoid;break-inside:avoid}
+.flow ul{margin:.5em 0 .9em;padding-left:1.15em}
+.flow li{margin:0 0 .45em}
+.flow li::marker{color:var(--ink-2)}
+.flow strong{font-weight:calc(var(--weight) + 250)}
+.flow code{font-family:var(--mono);font-size:.8em;overflow-wrap:anywhere;-webkit-hyphens:none;hyphens:none}
+.flow .tomb{margin-left:.35em;font-size:.8em}
+.para-indent p{margin:0}
+.para-indent p + p{text-indent:1.4em}
+.para-space p{margin:0 0 .75em}
+
+mark.hl{color:inherit;background:none;padding:0 .04em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.hl-wash mark.hl{background:var(--wash)}
+.hl-line mark.hl{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.24em;text-decoration-color:var(--ink-2)}
+.hl-marker mark.hl{background:var(--marker)}
+
+/* ---------- Panel ---------- */
+.panel{
+  width:340px;height:100%;overflow-y:auto;overscroll-behavior:contain;
+  background:var(--panel);color:var(--ink);border-left:1.5px solid var(--ink);
+  padding-inline:20px;padding-block:18px 32px;display:flex;flex-direction:column;gap:20px;
+}
+.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.eyebrow{margin:0 0 2px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+.panel-title{margin:0;font-family:var(--font);font-size:22px;font-weight:600;line-height:1.15}
+.panel-intro{margin:0;color:var(--ink-2)}
+.group{display:grid;gap:12px;padding-top:16px;border-top:1px solid var(--rule)}
+.group-title{margin:0;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.ctl{display:grid;grid-template-columns:1fr auto;align-items:baseline;row-gap:0}
+.ctl output{font:12px var(--mono);font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.ctl input[type=range]{grid-column:1 / -1}
+.row{display:grid;grid-template-columns:92px minmax(0,1fr);align-items:center;gap:10px}
+.row-label{color:var(--ink)}
+.note{margin:0;font-size:12.5px;color:var(--ink-2)}
+.readout{margin:0;font-size:12.5px;color:var(--ink-2)}
+.readout strong{font:500 13px var(--mono);color:var(--ink);font-variant-numeric:tabular-nums}
+fieldset{margin:0;padding:0;border:0;min-width:0;display:grid;gap:12px}
+fieldset:disabled{opacity:.42}
+
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:26px;margin:0;background:transparent;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--ink)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:18px;margin-top:-8px;background:var(--panel);border:2px solid var(--ink);border-radius:2px}
+input[type=range]::-moz-range-track{height:2px;background:var(--ink)}
+input[type=range]::-moz-range-thumb{width:8px;height:14px;background:var(--panel);border:2px solid var(--ink);border-radius:2px}
+input[type=range]:focus-visible{outline-offset:4px}
+
+.select{position:relative}
+.select select{-webkit-appearance:none;appearance:none;width:100%;font:inherit;color:var(--ink);background:var(--panel);border:1.5px solid var(--ink);border-radius:3px;padding:8px 34px 8px 10px;cursor:pointer}
+.select::after{content:"";position:absolute;right:14px;top:50%;width:7px;height:7px;border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);transform:translateY(-70%) rotate(45deg);pointer-events:none}
+
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border:1.5px solid var(--ink);border-radius:3px;overflow:hidden}
+.seg input{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+.seg label{padding:7px 6px;text-align:center;cursor:pointer;border-left:1.5px solid var(--ink);white-space:nowrap;font-size:13px;line-height:1.2}
+.seg label:first-of-type{border-left:0}
+.seg input:checked + label{background:var(--ink);color:var(--panel);font-weight:700}
+.seg input:focus-visible + label{outline:2px solid var(--ink);outline-offset:-5px}
+.seg input:checked:focus-visible + label{outline-color:var(--panel)}
+
+.btn{font:700 13px/1.1 var(--ui);letter-spacing:.02em;color:var(--ink);background:transparent;border:1.5px solid var(--ink);border-radius:3px;padding:9px 12px;cursor:pointer}
+.btn:hover{background:var(--wash)}
+.btn:active{background:var(--ink);color:var(--panel)}
+.btn.quiet{border-color:var(--rule);font-weight:400}
+.btn.wide{width:100%}
+.btn-row{display:flex;flex-wrap:wrap;gap:8px}
+kbd{font:11px var(--mono);padding:0 5px;border:1px solid var(--ink-2);border-bottom-width:2px;border-radius:3px;white-space:nowrap}
+
+.code{margin:0;max-height:260px;overflow:auto;padding:12px;background:var(--paper);border:1px solid var(--rule);border-radius:3px;font:11.5px/1.5 var(--mono);color:var(--ink);white-space:pre}
+.keys{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:12.5px;align-items:baseline}
+.keys dt{margin:0;white-space:nowrap}
+.keys dd{margin:0;color:var(--ink-2)}
+.fine{margin:0;font-size:12px;color:var(--ink-2)}
+
+/* ---------- Compare ---------- */
+.compare{position:fixed;inset:0;z-index:20;overflow:auto;background:var(--paper);color:var(--ink);padding-block:24px 48px;padding-inline:max(16px, 4vw)}
+.cmp-inner{max-width:1240px;margin:0 auto;display:grid;gap:20px}
+.cmp-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding-bottom:14px;border-bottom:1.5px solid var(--ink)}
+.cmp-head h2{margin:0;font-family:var(--font);font-size:24px;font-weight:600;line-height:1.2}
+.cmp-note{margin:0;max-width:68ch;color:var(--ink-2)}
+.cmp-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(min(100%, 280px), 1fr));gap:28px}
+.cmp-col{display:grid;align-content:start;gap:10px;padding-top:12px;border-top:1px solid var(--rule)}
+.cmp-col h3{margin:0;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.cmp-cost{margin:0;font-size:12.5px;color:var(--ink-2)}
+.cmp-text{max-width:calc(var(--measure) * 1ch);font-family:var(--font);font-size:var(--size);line-height:var(--leading);font-weight:var(--weight);text-wrap:pretty}
+.cmp-col .btn{justify-self:start}
+
+/* ---------- Narrow screens ---------- */
+@media (max-width:720px){
+  .app{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto}
+  .panel{width:auto;height:auto;max-height:56vh;max-height:56dvh;border-left:0;border-top:1.5px solid var(--ink)}
+}
+@media (prefers-reduced-motion: reduce){.flow{transition:none!important}}
+</style>
+
+<div class="app" id="app" data-panel="open" data-chrome="show">
+  <main class="reader" id="reader" aria-label="Reading surface">
+    <div class="runhead">
+      <span class="rh-title">Deep Digital Reading</span>
+      <span class="rh-sec" id="rhSec"></span>
+      <button class="btn tune-btn" id="tuneBtn" type="button" aria-controls="panel" aria-expanded="false">Tune</button>
+    </div>
+
+    <div class="viewport" id="viewport">
+      <div class="flow ghost" id="ghost" aria-hidden="true"></div>
+      <article class="flow align-hyphen para-indent hl-wash" id="flow" lang="en">
+        <header>
+          <p class="doc-kicker">Sample text · the essay you shared</p>
+          <h1>Architectural Frameworks for Deep Digital Reading</h1>
+          <p class="doc-sub">Re-engineering Attention from Algorithmic Consumption to High-Retention Information Systems</p>
+        </header>
+
+        <h2>Cognitive Ergonomics of Information Consumption: Microlearning Versus Deep Reading</h2>
+        <p>The contemporary digital media ecosystem is primarily engineered around algorithmic distribution models that leverage variable reward schedules to maximize platform engagement. In an attempt to mitigate the cognitive fragmentation associated with endless social media scrolling, microlearning platforms such as Deepstash, Headway, and Nibble have emerged as functional proxies for algorithmic feeds. These platforms decompose complex non-fiction literature, long-form essays, podcasts, and academic research into atomized idea cards, typically capped at under 200 words. Deepstash, for instance, packages these modular summaries into an interface driven by gamification mechanics, including experience points (XP), daily reading streaks, and thematic collections known as stashes.</p>
+        <p>While microlearning systems successfully lower the activation energy required to engage with non-fiction concepts during brief temporal windows, they introduce profound cognitive and epistemological trade-offs. Isolating a conceptual assertion from its broader argumentative scaffolding strips the idea of its contextual nuance, counter-arguments, and methodological qualifications. This structural simplification frequently induces the fluency heuristic, wherein a reader mistakes the rapid visual and semantic processing of a short card for substantive conceptual mastery. Furthermore, because platforms like Deepstash and Nibble rely on algorithmic explore feeds and community-curated submissions of variable quality, they preserve the habituated physical gesture of rapid swiping, retaining the underlying dopamine-seeking browsing loop of legacy social platforms.</p>
+        <p>The documented decline in deep reading comprehension on digital devices is fundamentally rooted in visual ergonomics and interface mechanics rather than the physical properties of emissive screens. Empirical syntheses, including a 2024 meta-analysis encompassing 49 comparative trials, demonstrate a persistent comprehension deficit when long-form text is consumed on digital screens as opposed to print. Crucially, this performance deficit is absent in texts under 500 words and escalates significantly as document length increases, pointing directly to working memory limitations and navigational interference.</p>
+        <p data-cmp>Controlled experimental evaluations demonstrate that continuous vertical scrolling is the primary operational driver of this cognitive deficit. Human reading cognition relies extensively on incidental spatial mapping, whereby the brain encodes semantic data alongside physical coordinates within a fixed, bounded topography. <mark class="hl">Bounded pagination establishes stable landmarks, such as the spatial placement of a sentence relative to the top-left boundary of an unmoving page.</mark> In contrast, continuous vertical scrolling continuously destabilizes these coordinates, forcing the visual cortex and executive control networks to perpetually reorient the text within the viewport. This extraneous cognitive burden depletes working memory resources, leaving diminished capacity for macro-level textual synthesis, inferential reasoning, and long-term consolidation.</p>
+
+        <h2>Structural Ingestion Pipelines: Decoupling Curation from Algorithmic Delivery</h2>
+        <p><mark class="hl">Systematic recovery of sustained attention requires severing the functional link between content discovery and content consumption.</mark> Mainstream digital platforms deliberately combine content hosting with real-time algorithmic recommendation engines designed to provoke affective reactivity and extend session durations. A robust personal knowledge pipeline neutralizes this dynamic by establishing a sovereign, pull-based syndication architecture that isolates raw information inputs from attention-capturing distribution surfaces.</p>
+
+        <h3>Syndication Architecture: Substack, Custom RSS, and Bridge Feeds</h3>
+        <p>Real Simple Syndication (RSS) and the Atom protocol represent foundational, open protocols that allow readers to aggregate published writing into a chronological, unmanipulated feed. While modern platforms often obfuscate their syndication feeds to retain users within proprietary application wrappers, standard syndication endpoints remain widely accessible across the open web.</p>
+        <p>Substack publications, which represent a significant segment of contemporary long-form independent analysis, natively support standard RSS syndication. Appending the <code>/feed</code> path to any custom or standard Substack URL converts the publication into a machine-readable XML feed. Ingesting these feeds directly into a dedicated reader bypasses the social metrics, dynamic discussion threads, and recommendation features of the native Substack application, isolating the long-form prose entirely.</p>
+        <p>For platforms lacking direct syndication endpoints, intermediate bridging utilities restore feed control. Communities hosted on Reddit can be converted to chronological, text-centric RSS streams by appending <code>.rss</code> to standard subreddit URLs (<code>https://old.reddit.com/r/[subreddit]/.rss</code>), stripping out UI distractions, algorithmic sorting, and video carousels. For more closed ecosystems, self-hosted or public instances of RSS-Bridge generate valid Atom/RSS feeds from social media accounts, allowing targeted monitoring of subject-matter experts without maintaining active platform accounts.</p>
+
+        <h3>Unified Read-It-Later Infrastructure: Readwise Reader and Instapaper</h3>
+        <p>Advanced read-it-later environments serve as centralized triage and sanitization engines for disparate media types, aggregating newsletters, web articles, academic PDFs, and audiovisual transcripts into a distraction-free repository. Readwise Reader implements an explicit separation of concerns through its dual-tier architecture: the Feed and the Library.</p>
+        <p>The Feed tier acts as an ephemeral ingestion buffer, capturing high-frequency inputs such as RSS updates, newsletter deliveries, and syndicated web searches. Items within the Feed are rapidly scanned, triaged, and either dismissed or formally escalated to the Library tier. The Library constitutes the permanent reading queue, structured sequentially into Inbox, Later, and Archive states to enforce deliberate prioritization. Ingestion into this infrastructure occurs through several deterministic pathways:</p>
+        <ul>
+          <li><strong>Direct DOM Parsing via Browser Extensions:</strong> Extensions execute local Document Object Model (DOM) parsing across active browser tabs (triggered by keyboard shortcuts such as <code>Alt + R</code>), stripping scripts, navigation bars, and dynamic advertisements to preserve pure typographic text.</li>
+          <li><strong>Dedicated Ingestion Inboxes:</strong> Read-it-later platforms provide individual parsing email addresses, allowing automated forwarding of long-form newsletters directly into the reading queue, thereby isolating deep reading material from operational communication channels.</li>
+          <li><strong>Direct Multi-Format Parsing:</strong> Standalone desktop and mobile interfaces accept direct file uploads, including EPUBs, PDFs up to 500 MB, and Markdown documents, standardizing heterogeneous layouts into a uniform typographic engine.</li>
+        </ul>
+        <p>Beyond layout sanitization, modern power readers integrate bidirectional synchronization with Personal Knowledge Management (PKM) ecosystems such as Obsidian, Notion, and OneNote. Text highlights, contextual marginalia, and document metadata are automatically exported as structured markdown or database entries. Additionally, integrated language model utilities, such as Readwise Reader’s Ghostreader, permit targeted querying of individual documents, citation verification, and counter-argument generation directly on the reading canvas, avoiding the cognitive switching costs of external chat interfaces.</p>
+
+        <h3>Executive Summarization Versus Deep Synthesis</h3>
+        <p>When time constraints prevent full-length reading, selecting an appropriate synthesis framework is essential to preserve analytical rigor. Standard executive summary tools, such as Blinkist and Headway, focus on 15-minute overviews designed to convey the primary conclusions of a text with minimal friction. While efficient for high-level scanning, this format tends to encourage passive ingestion, omitting methodological debates and supporting evidence.</p>
+        <p>In contrast, deep synthesis engines like Shortform provide comprehensive 20-to-45-minute analytical guides that actively deconstruct a book’s core thesis. Rather than merely reiterating an author’s assertions, Shortform integrates comparative analyses that cite alternative perspectives, highlight underlying logical fallacies, and embed structured reflection exercises directly within the text. This active intellectual engagement transforms passive summarization into critical study, facilitating the construction of durable mental models.</p>
+
+        <h2>Algorithmic Neutralization in Audiovisual Media: Long-Form Video and Audio Curation</h2>
+        <p>The cognitive vulnerabilities exploited by algorithmic text feeds operate with even greater efficacy in audiovisual media. Mainstream streaming environments rely heavily on auto-play mechanisms, hyper-personalized recommendation sidebars, and short-form video loops designed to induce passive consumption cycles, eroding the user’s capacity for sustained focus.</p>
+
+        <h3>Interface De-gamification: The Unhook Architecture</h3>
+        <p>The educational utility of broad-spectrum video platforms like YouTube is frequently compromised by surrounding interface elements engineered for user retention. The open-source Unhook browser extension operates as an interface filter, selectively removing algorithmic triggers while preserving core search and playback capabilities.</p>
+        <p>Unhook systematically suppresses the algorithmic Home Feed, replacing the default landing page with a neutral interface that requires intentional, query-based search. During playback, it removes recommended video sidebars, end-screen video cards, live chat sidebars, and user comment sections, effectively preventing associative browsing. Furthermore, it strips algorithmic Shorts drawers and trending tabs from the application, converting a platform designed for behavioral retention into an isolated, pull-based video repository.</p>
+
+        <h3>Independent Creator-Owned Streaming: Nebula</h3>
+        <p>Where commercial video platforms remain reliant on advertising revenue tied to session duration and click-through rates, creator-owned distribution networks such as Nebula establish an alternative, subscriber-funded infrastructure. Nebula focuses exclusively on long-form video essays, investigative documentaries, and academic content across domains such as history, science, philosophy, and engineering.</p>
+        <p>The interface architecture of Nebula deliberately excludes algorithmic retention loops. The platform contains no short-form vertical video feeds, clickbait-optimized recommendation sidebars, or intrusive commercial breaks. Because creator compensation is tied directly to subscriber funding rather than algorithmic metrics, creators are structurally incentivized to produce comprehensive, research-backed media rather than sensationalized, high-velocity content.</p>
+
+        <h3>Asynchronous Audio Architectures and Synced Transcription</h3>
+        <p>Mindful audio workflows require shifting from sequential, passive listening toward structured, searchable, and highlightable audio repositories. Contemporary read-it-later platforms address this by integrating server-side podcast transcription engines tied to standard podcast RSS feeds.</p>
+        <p>This infrastructure synchronizes audio playback with dynamic text rendering, allowing the user to follow written transcripts while listening. This multi-modal consumption model stabilizes attention and significantly improves memory retention. Users can highlight textual excerpts within the transcript during playback, automatically saving precise timestamped quotations directly to an external personal knowledge base. Furthermore, full textual transcription enables non-linear audio navigation, allowing readers to search, skim, and jump directly to relevant conceptual arguments while bypassing conversational filler and promotional segments.</p>
+
+        <h2>Hardware Ergonomics and Distraction-Free E-Paper Ecosystems</h2>
+        <p>Digital reading conducted on emissive Liquid Crystal Displays (LCD) and Organic Light-Emitting Diode (OLED) screens exposes users to continuous notifications, high-contrast visual glare, and low physical switching barriers that encourage rapid task-hopping. Electrophoretic e-paper displays fundamentally modify this physical dynamic. By relying on ambient light reflection rather than direct emission, and operating within physical refresh limitations that discourage fast interface cycling, e-paper hardware enforces a slower, more contemplative interaction cadence.</p>
+
+        <h3>Closed E-Reader Infrastructure: The Kindle Personal Documents Pipeline</h3>
+        <p>Dedicated e-readers like the Amazon Kindle provide a hardware-isolated environment devoid of multi-tasking interfaces, messaging applications, or dynamic notification systems. However, integrating external long-form web content and syndicated newsletters into this closed operating system requires a structured distribution pipeline.</p>
+        <p>This ingestion workflow relies on the Amazon Personal Documents Service. Users configure authorization rules within their Amazon account settings (Manage Your Content and Devices &gt; Preferences &gt; Personal Document Settings), whitelisting specific sender addresses within the Approved Personal Document E-Mail List. The unique <code>@kindle.com</code> receiving address assigned to the physical hardware is then linked to external automation tools.</p>
+        <p>Instapaper utilizes this pipeline to compile unread web articles into a single, unified periodical e-book, which is delivered wirelessly to the e-reader on a scheduled daily or weekly cadence. Similarly, single-article browser utilities such as FiveFilters’ Push to Kindle convert individual web essays into clean, typography-optimized e-books complete with a navigable table of contents and native highlighting capabilities, entirely bypassing the clutter of modern web pages.</p>
+
+        <h3>Open Android E-Ink Systems: Onyx Boox Configuration</h3>
+        <p>While closed e-readers offer maximum isolation, they lack native support for dynamic RSS ingestion, multi-modal playback, and real-time bi-directional knowledge synchronization. Open e-paper hardware running modified Android operating systems—such as the Onyx Boox Palma 2, Poke5, Note Air series, and Go 10.3—bridges this gap by executing modern read-it-later applications directly on an e-ink substrate.</p>
+        <p>Deploying standard mobile software onto e-paper displays requires precise system-level tuning to avoid rendering artifacts, low-contrast text, and severe visual ghosting:</p>
+        <ul>
+          <li><strong>Enforcing Pagination Over Scrolling:</strong> Standard fluid scrolling on e-ink hardware introduces severe visual smear and completely destroys the reader’s spatial cognitive map. Within Readwise Reader or Instapaper, Pagination Mode must be explicitly enabled, transforming continuous vertical web articles into discrete pages navigated via horizontal swipe gestures or physical volume keys.</li>
+          <li><strong>Per-Application DPI Overrides:</strong> Desktop-optimized web applications often render text with improper scaling on specialized e-paper screens. Adjusting the per-application DPI settings within the Boox system optimizer ensures that typography renders crisply and at an optimal reading scale.</li>
+          <li><strong>Display Refresh Optimization:</strong> Operating system window animations and smooth transition effects must be disabled. E-ink display modes should be locked to Regal or HD Mode for reading applications to prioritize typographic contrast and minimize residual ghosting, avoiding high-speed modes that sacrifice textual clarity.</li>
+          <li><strong>Optical Stack Selection:</strong> Hardware variants that deliberately omit front-light diffusion layers, such as the Onyx Boox Go 10.3, minimize the physical distance between the surface glass and the electrophoretic ink layer, yielding paper-like contrast and sharpness at the expense of requiring external ambient light. Conversely, compact pocket-sized hardware like the Boox Palma 2 provides high portability, effectively serving as an e-paper substitute for smartphone checking during brief transitions throughout the day.</li>
+        </ul>
+
+        <h2>Strategic Synthesis: Engineering a High-Retention Information Ecosystem</h2>
+        <p>The systematic transition from dopamine-driven algorithmic scrolling to high-retention deep reading requires a coordinated restructuring across four interdependent operational tiers: Source Syndication, Content Triage, Media Sanitization, and Physical Hardware. Relying on individual discipline alone is insufficient against platforms optimized for behavioral capture; instead, users must establish technical barriers that decouple discovery from consumption and match reading interfaces to human cognitive architecture.</p>
+        <p>At the source tier, algorithmic discovery loops are neutralized by routing independent publications through direct, pull-based syndication protocols. By extracting clean Substack feeds via <code>/feed</code> endpoints, subreddits via <code>.rss</code> endpoints, and targeted web feeds via RSS-Bridge, readers eliminate algorithmic ranking, behavioral sorting, and social notification hooks.</p>
+        <p>At the triage and ingestion tier, high-frequency feeds are isolated within dedicated reading engines such as Readwise Reader and Instapaper. By maintaining an explicit separation between an ephemeral ingestion feed and a prioritized, permanent reading queue, readers prevent inbox overload and ensure that long-form essays, academic PDFs, and technical documentation are evaluated deliberately. When full-text analysis is constrained by time, deep synthesis engines like Shortform provide critical, multi-perspective chapter breakdowns that preserve dialectical depth, contrasting sharply with the superficial overviews of microlearning apps.</p>
+        <p>At the media sanitization tier, audiovisual platforms are stripped of behavioral retention loops. Browser extensions like Unhook remove algorithmic home feeds, recommendation sidebars, and short-form video formats, converting open video platforms into targeted search engines. Simultaneously, migrating long-form video consumption to subscriber-funded platforms like Nebula supports sustained viewing of in-depth video essays. For audio, automated podcast RSS transcription allows multi-modal reading and listening, transforming linear audio streams into searchable, highlightable text that integrates directly with personal knowledge bases.</p>
+        <p>Finally, at the physical rendering tier, consumption is migrated away from emissive screens to paginated e-paper environments. Whether executed through automated Kindle periodical digests delivered over the Personal Documents Service or through tuned open Android e-ink hardware like Onyx Boox utilizing pagination and high-contrast Regal refresh modes, <mark class="hl">bounding text into stable pages preserves the reader’s spatial cognitive map</mark>. This hardware and layout alignment reduces extraneous cognitive load, protects working memory, and restores the capacity for sustained, deep digital reading.<span class="tomb" aria-hidden="true">∎</span></p>
+      </article>
+    </div>
+
+    <footer class="folio">
+      <div class="folio-row">
+        <span id="pageNum" aria-live="polite">Page 1 of 1</span>
+        <span class="folio-keys">← → or click to turn · T to tune</span>
+        <span id="timeLeft"></span>
+      </div>
+      <div class="progress" aria-hidden="true"><span id="progressFill"></span></div>
+    </footer>
+
+    <div class="grain" aria-hidden="true"></div>
+    <div class="flash" id="flash" aria-hidden="true"></div>
+  </main>
+
+  <aside class="panel" id="panel" aria-label="Page settings">
+    <div class="panel-head">
+      <div>
+        <p class="eyebrow">Quire</p>
+        <h2 class="panel-title">Page proof</h2>
+      </div>
+      <button class="btn" id="panelClose" type="button">Done</button>
+    </div>
+    <p class="panel-intro">Tune the page until it reads like ink. The tokens at the bottom carry your settings into the Flutter build.</p>
+
+    <section class="group" aria-labelledby="g-light">
+      <h3 class="group-title" id="g-light">Light</h3>
+      <div class="seg" role="radiogroup" aria-label="Day or night">
+        <input type="radio" name="mode" id="mode-auto" value="auto"><label for="mode-auto">Auto</label>
+        <input type="radio" name="mode" id="mode-day" value="day"><label for="mode-day">Day</label>
+        <input type="radio" name="mode" id="mode-night" value="night"><label for="mode-night">Night</label>
+      </div>
+      <p class="note" id="modeNote">Following your system theme.</p>
+      <div class="ctl"><label for="light">Front light</label><output id="light-out" for="light"></output><input type="range" id="light" min="0" max="100" step="1"></div>
+      <div class="ctl"><label for="warmth">Warmth</label><output id="warmth-out" for="warmth"></output><input type="range" id="warmth" min="0" max="100" step="1"></div>
+      <div class="ctl"><label for="inkLevel">Ink darkness</label><output id="inkLevel-out" for="inkLevel"></output><input type="range" id="inkLevel" min="0" max="100" step="1"></div>
+      <div class="ctl"><label for="grain">Paper grain</label><output id="grain-out" for="grain"></output><input type="range" id="grain" min="0" max="10" step="1"></div>
+      <p class="readout"><strong id="ratio">11.4 : 1</strong> ink on paper. Black on white is 21 : 1.</p>
+    </section>
+
+    <section class="group" aria-labelledby="g-type">
+      <h3 class="group-title" id="g-type">Type</h3>
+      <div class="select">
+        <label class="sr-only" for="face">Typeface</label>
+        <select id="face">
+          <option value="literata">Literata</option>
+          <option value="source">Source Serif 4</option>
+          <option value="charis">Charis SIL</option>
+          <option value="garamond">EB Garamond</option>
+          <option value="atkinson">Atkinson Hyperlegible (sans)</option>
+        </select>
+      </div>
+      <p class="note" id="faceNote"></p>
+      <div class="ctl"><label for="size">Size</label><output id="size-out" for="size"></output><input type="range" id="size" min="14" max="28" step="1"></div>
+      <div class="ctl"><label for="bold">Boldness</label><output id="bold-out" for="bold"></output><input type="range" id="bold" min="0" max="4" step="1"></div>
+      <p class="note" id="boldNote" hidden>This face comes in two weights, so Boldness jumps between them.</p>
+      <div class="ctl"><label for="leading">Line spacing</label><output id="leading-out" for="leading"></output><input type="range" id="leading" min="1.2" max="2" step="0.05"></div>
+      <div class="ctl"><label for="measure">Line length</label><output id="measure-out" for="measure"></output><input type="range" id="measure" min="40" max="90" step="1"></div>
+      <div class="ctl"><label for="margin">Margins</label><output id="margin-out" for="margin"></output><input type="range" id="margin" min="16" max="120" step="4"></div>
+    </section>
+
+    <section class="group" aria-labelledby="g-page">
+      <h3 class="group-title" id="g-page">Page</h3>
+      <div class="row">
+        <span class="row-label" id="lbl-align">Alignment</span>
+        <div class="seg" role="radiogroup" aria-labelledby="lbl-align">
+          <input type="radio" name="align" id="align-ragged" value="ragged"><label for="align-ragged">Ragged</label>
+          <input type="radio" name="align" id="align-justify" value="justify"><label for="align-justify">Justified</label>
+          <input type="radio" name="align" id="align-hyphen" value="hyphen"><label for="align-hyphen">Hyphens</label>
+        </div>
+      </div>
+      <p class="note" id="hyphNote" hidden>This browser is not hyphenating, so Hyphens looks the same as Justified here. Safari and Chrome on macOS both hyphenate; open the page in one of them to judge it.</p>
+      <button class="btn wide" id="cmpOpen" type="button">Compare alignments side by side</button>
+      <div class="row">
+        <span class="row-label" id="lbl-paras">Paragraphs</span>
+        <div class="seg" role="radiogroup" aria-labelledby="lbl-paras">
+          <input type="radio" name="paras" id="paras-indent" value="indent"><label for="paras-indent">Indented</label>
+          <input type="radio" name="paras" id="paras-space" value="space"><label for="paras-space">Spaced</label>
+        </div>
+      </div>
+      <div class="row">
+        <span class="row-label" id="lbl-hl">Highlights</span>
+        <div class="seg" role="radiogroup" aria-labelledby="lbl-hl">
+          <input type="radio" name="hl" id="hl-wash" value="wash"><label for="hl-wash">Grey</label>
+          <input type="radio" name="hl" id="hl-line" value="line"><label for="hl-line">Underline</label>
+          <input type="radio" name="hl" id="hl-marker" value="marker"><label for="hl-marker">Marker</label>
+        </div>
+      </div>
+      <div class="row">
+        <span class="row-label" id="lbl-chrome">Header and page number</span>
+        <div class="seg" role="radiogroup" aria-labelledby="lbl-chrome">
+          <input type="radio" name="chrome" id="chrome-show" value="show"><label for="chrome-show">Show</label>
+          <input type="radio" name="chrome" id="chrome-hide" value="hide"><label for="chrome-hide">Hide</label>
+        </div>
+      </div>
+    </section>
+
+    <section class="group" aria-labelledby="g-turn">
+      <h3 class="group-title" id="g-turn">Page turn</h3>
+      <div class="seg" role="radiogroup" aria-label="Page turn style">
+        <input type="radio" name="turn" id="turn-instant" value="instant"><label for="turn-instant">Instant</label>
+        <input type="radio" name="turn" id="turn-eink" value="eink"><label for="turn-eink">E-ink</label>
+        <input type="radio" name="turn" id="turn-fade" value="fade"><label for="turn-fade">Fade</label>
+      </div>
+      <p class="note">E-ink swaps pages with no motion. Every few pages it flashes the page to clear ghosting, as a real e-ink display does.</p>
+      <fieldset id="einkOpts">
+        <legend class="sr-only">E-ink refresh options</legend>
+        <div class="ctl"><label for="every">Full refresh every</label><output id="every-out" for="every"></output><input type="range" id="every" min="1" max="20" step="1"></div>
+        <div class="row">
+          <span class="row-label" id="lbl-flash">Flash</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lbl-flash">
+            <input type="radio" name="flash" id="flash-soft" value="soft"><label for="flash-soft">Soft</label>
+            <input type="radio" name="flash" id="flash-full" value="full"><label for="flash-full">Full</label>
+          </div>
+        </div>
+        <div class="row">
+          <span class="row-label" id="lbl-ghost">Ghosting</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lbl-ghost">
+            <input type="radio" name="ghost" id="ghost-off" value="off"><label for="ghost-off">Off</label>
+            <input type="radio" name="ghost" id="ghost-on" value="on"><label for="ghost-on">On</label>
+          </div>
+        </div>
+        <button class="btn wide" id="refreshNow" type="button">Refresh now <kbd>R</kbd></button>
+      </fieldset>
+      <p class="note" id="rmNote" hidden>Your system asks for reduced motion, so the page never flashes. Ghosting still shows.</p>
+    </section>
+
+    <section class="group" aria-labelledby="g-tokens">
+      <h3 class="group-title" id="g-tokens">Tokens</h3>
+      <div class="seg" role="radiogroup" aria-label="Token format">
+        <input type="radio" name="fmt" id="fmt-dart" value="dart"><label for="fmt-dart">Dart</label>
+        <input type="radio" name="fmt" id="fmt-json" value="json"><label for="fmt-json">JSON</label>
+      </div>
+      <pre class="code" tabindex="0" aria-label="Design tokens"><code id="tokensCode"></code></pre>
+      <div class="btn-row">
+        <button class="btn" id="copyTokens" type="button">Copy tokens</button>
+        <button class="btn quiet" id="resetAll" type="button">Reset to defaults</button>
+      </div>
+    </section>
+
+    <section class="group" aria-labelledby="g-keys">
+      <h3 class="group-title" id="g-keys">Keys</h3>
+      <dl class="keys">
+        <dt><kbd>←</kbd> <kbd>→</kbd> <kbd>Space</kbd></dt><dd>Turn the page. Clicking the left third goes back.</dd>
+        <dt><kbd>Home</kbd> <kbd>End</kbd></dt><dd>First or last page</dd>
+        <dt>Top edge</dt><dd>Click or tap to show or hide the header</dd>
+        <dt><kbd>T</kbd> <kbd>N</kbd> <kbd>R</kbd></dt><dd>Tuning panel, day or night, refresh</dd>
+      </dl>
+      <p class="fine">The sample text is the essay you shared. Settings are saved in this browser only.</p>
+    </section>
+  </aside>
+</div>
+
+<div class="compare" id="compare" hidden role="dialog" aria-modal="true" aria-labelledby="cmpTitle">
+  <div class="cmp-inner">
+    <div class="cmp-head">
+      <h2 id="cmpTitle">Alignment, side by side</h2>
+      <button class="btn" id="cmpClose" type="button">Close</button>
+    </div>
+    <p class="cmp-note">The same paragraph three ways, at your current type settings. In justified text, look for rivers: pale channels running down the column where word spaces had to stretch because a long word could not be split. Narrow columns like these show the problem most, and phone screens are this narrow.</p>
+    <div class="cmp-grid">
+      <section class="cmp-col">
+        <h3>Ragged right</h3>
+        <p class="cmp-cost">Flutter: built in.</p>
+        <div class="cmp-text align-ragged" lang="en"></div>
+        <button class="btn" type="button" data-use="ragged">Use ragged right</button>
+      </section>
+      <section class="cmp-col">
+        <h3>Justified</h3>
+        <p class="cmp-cost">Flutter: built in.</p>
+        <div class="cmp-text align-justify" lang="en"></div>
+        <button class="btn" type="button" data-use="justify">Use justified</button>
+      </section>
+      <section class="cmp-col">
+        <h3>Justified with hyphens</h3>
+        <p class="cmp-cost">Flutter: not built in. The Flutter spike tests a cheap route first; the fallback is a custom line breaker, roughly a week of work.</p>
+        <p class="cmp-cost" id="hyphNote2" hidden><strong>This browser is not hyphenating</strong>, so this column matches the one beside it. Open the page in Safari or Chrome on macOS to see real hyphenation.</p>
+        <div class="cmp-text align-hyphen" lang="en"></div>
+        <button class="btn" type="button" data-use="hyphen">Use hyphenated</button>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const $ = (s) => document.querySelector(s);
+  const root = document.documentElement;
+  const app = $('#app'), reader = $('#reader'), viewport = $('#viewport');
+  const flow = $('#flow'), ghost = $('#ghost'), flashEl = $('#flash'), panel = $('#panel'), compare = $('#compare');
+
+  const KEY = 'quire-page-proof-v1';
+  const GAP = 80;
+  const WPM = 230;
+  const WEIGHTS = [340, 400, 460, 540, 620];
+  const FACES = {
+    literata: { name: 'Literata', stack: '"Literata", Georgia, serif', variable: true,
+      note: 'Drawn by TypeTogether for Google Play Books, so it was made for reading on screens.' },
+    source: { name: 'Source Serif 4', stack: '"Source Serif 4", Georgia, serif', variable: true,
+      note: 'Adobe’s text serif, with optical sizes that sharpen small text.' },
+    charis: { name: 'Charis SIL', stack: '"Charis SIL", Charter, "Bitstream Charter", Georgia, serif', variable: false,
+      note: 'Built on Bitstream Charter, a face designed to hold up on low-resolution output.' },
+    garamond: { name: 'EB Garamond', stack: '"EB Garamond", Garamond, Georgia, serif', variable: true,
+      note: 'A revival of 16th-century Garamond. The most bookish option, with the thinnest strokes.' },
+    atkinson: { name: 'Atkinson Hyperlegible', stack: '"Atkinson Hyperlegible", system-ui, sans-serif', variable: false,
+      note: 'The Braille Institute’s sans, drawn so easily confused letters stay distinct.' },
+  };
+  const DEFAULTS = {
+    mode: 'auto', light: 70, warmth: 20, inkLevel: 50, grain: 3,
+    face: 'literata', size: 19, bold: 1, leading: 1.55, measure: 64, margin: 56,
+    align: 'hyphen', paras: 'indent', hl: 'wash', chrome: true,
+    turn: 'eink', every: 8, flash: 'soft', ghost: false,
+    fmt: 'dart', panel: null, pos: 0,
+  };
+  const LAYOUT = new Set(['face', 'size', 'bold', 'leading', 'measure', 'margin', 'align', 'paras']);
+  const RANGES = {
+    light: (v) => String(v), warmth: (v) => String(v), inkLevel: (v) => String(v),
+    grain: (v) => v + '%', size: (v) => v + ' px', bold: (v) => (v + 1) + ' of 5',
+    leading: (v) => v.toFixed(2), measure: (v) => v + ' ch', margin: (v) => v + ' px',
+    every: (v) => v === 1 ? 'page' : v + ' pages',
+  };
+  const RADIOS = ['mode', 'align', 'paras', 'hl', 'chrome', 'turn', 'flash', 'ghost', 'fmt'];
+  const toVal = (n, v) => n === 'ghost' ? v === 'on' : n === 'chrome' ? v === 'show' : v;
+  const fromVal = (n, v) => n === 'ghost' ? (v ? 'on' : 'off') : n === 'chrome' ? (v ? 'show' : 'hide') : v;
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Settings ---------- */
+  function load() {
+    let raw = {};
+    try { raw = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { raw = {}; }
+    const s = { ...DEFAULTS };
+    for (const k in DEFAULTS) {
+      if (k === 'panel') { if (typeof raw.panel === 'boolean') s.panel = raw.panel; continue; }
+      if (raw[k] !== undefined && typeof raw[k] === typeof DEFAULTS[k]) s[k] = raw[k];
+    }
+    if (!FACES[s.face]) s.face = DEFAULTS.face;
+    return s;
+  }
+  let S = load();
+  let saveTimer = 0;
+  function save() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* storage unavailable */ } }, 250);
+  }
+
+  /* ---------- Colour: OKLCH to sRGB ---------- */
+  function oklch(L, C, h) {
+    const a = C * Math.cos(h * Math.PI / 180), b = C * Math.sin(h * Math.PI / 180);
+    const l = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3;
+    const m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3;
+    const s = (L - 0.0894841775 * a - 1.2914855480 * b) ** 3;
+    const rgb = [
+      4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+      -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+      -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s,
+    ];
+    return '#' + rgb.map((v) => {
+      v = clamp(v, 0, 1);
+      v = v <= 0.0031308 ? 12.92 * v : 1.055 * v ** (1 / 2.4) - 0.055;
+      return Math.round(v * 255).toString(16).padStart(2, '0');
+    }).join('').toUpperCase();
+  }
+  function luminance(hex) {
+    const n = parseInt(hex.slice(1), 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+      .map((c) => { c /= 255; return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; })
+      .reduce((acc, c, i) => acc + c * [0.2126, 0.7152, 0.0722][i], 0);
+  }
+  function contrast(a, b) {
+    const x = luminance(a), y = luminance(b);
+    return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+  }
+  // Front light, warmth and ink darkness behave like an e-reader's controls:
+  // the page never reaches pure white and the ink never reaches pure black.
+  function palette(night) {
+    const l = S.light / 100, w = S.warmth / 100, k = S.inkLevel / 100;
+    const h = 92 - 22 * w;
+    const P = night ? [0.15 + 0.09 * l, 0.003 + 0.018 * w] : [0.78 + 0.18 * l, 0.004 + 0.042 * w];
+    const I = night ? [0.64 + 0.26 * k, 0.006 + 0.03 * w] : [0.40 - 0.26 * k, (0.004 + 0.042 * w) * 0.35];
+    const mix = (t) => oklch(P[0] + (I[0] - P[0]) * t, P[1] + (I[1] - P[1]) * t, h);
+    const dir = night ? 1 : -1;
+    return {
+      paper: oklch(P[0], P[1], h),
+      ink: oklch(I[0], I[1], h),
+      'ink-2': mix(night ? 0.72 : 0.66),
+      rule: oklch(P[0] + dir * 0.075, P[1], h),
+      panel: oklch(P[0] + dir * 0.03, P[1], h),
+      wash: oklch(P[0] + dir * 0.095, P[1] + 0.004, h),
+      marker: night ? oklch(0.40, 0.065, 88) : oklch(Math.min(P[0], 0.93) - 0.03, 0.085, 98),
+      'flash-soft': mix(0.55),
+    };
+  }
+  function isNight() {
+    if (S.mode === 'day') return false;
+    if (S.mode === 'night') return true;
+    const t = root.getAttribute('data-theme');
+    if (t === 'dark') return true;
+    if (t === 'light') return false;
+    return matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
+  let PAL = palette(false);
+  function applyVars() {
+    const night = isNight();
+    PAL = palette(night);
+    const st = root.style;
+    for (const k in PAL) st.setProperty('--' + k, PAL[k]);
+    st.setProperty('color-scheme', night ? 'dark' : 'light');
+    st.setProperty('--grain', (S.grain / 100).toFixed(3));
+    st.setProperty('--grain-inv', night ? '1' : '0');
+    st.setProperty('--grain-blend', night ? 'screen' : 'multiply');
+    st.setProperty('--font', FACES[S.face].stack);
+    st.setProperty('--size', S.size + 'px');
+    st.setProperty('--weight', String(WEIGHTS[S.bold]));
+    st.setProperty('--leading', String(S.leading));
+    st.setProperty('--measure', String(S.measure));
+    st.setProperty('--margin', S.margin + 'px');
+    const cls = 'flow align-' + S.align + ' para-' + S.paras + ' hl-' + S.hl;
+    flow.className = cls;
+    ghost.className = cls + ' ghost' + (ghost.classList.contains('on') ? ' on' : '');
+    app.dataset.chrome = S.chrome ? 'show' : 'hide';
+  }
+
+  /* ---------- Pagination ---------- */
+  let page = 0, pages = 1, stride = 0, lineH = 0, sinceFull = 0, heads = [], busy = false;
+  const words = (flow.textContent.match(/\S+/g) || []).length;
+
+  function captureAnchor() {
+    if (!stride) return null;
+    const r = viewport.getBoundingClientRect();
+    const x = r.left + 3, y = r.top + Math.max(4, lineH * 0.5);
+    let node = null, offset = 0;
+    if (document.caretPositionFromPoint) {
+      const p = document.caretPositionFromPoint(x, y);
+      if (p) { node = p.offsetNode; offset = p.offset; }
+    } else if (document.caretRangeFromPoint) {
+      const rg = document.caretRangeFromPoint(x, y);
+      if (rg) { node = rg.startContainer; offset = rg.startOffset; }
+    }
+    if (!node || !flow.contains(node)) return null;
+    return { node, offset };
+  }
+  function pageOfAnchor(a) {
+    const rg = document.createRange();
+    try {
+      rg.setStart(a.node, a.offset);
+      if (a.node.nodeType === 3 && a.offset < a.node.length) rg.setEnd(a.node, a.offset + 1);
+    } catch (e) { return null; }
+    const rect = rg.getClientRects()[0];
+    if (!rect) return null;
+    return Math.floor((rect.left - flow.getBoundingClientRect().left + 2) / stride);
+  }
+  function pageOfEl(el) {
+    return Math.floor((el.getBoundingClientRect().left - flow.getBoundingClientRect().left + 2) / stride);
+  }
+
+  // Text is anchored by character, not by page number, so a change of size or
+  // measure lands on the same sentence even though every page break has moved.
+  function paginate(anchor) {
+    if (anchor === undefined) anchor = captureAnchor();
+    const frac = pages > 1 ? page / (pages - 1) : S.pos;
+    clearGhost();
+    const vw = Math.floor(viewport.clientWidth);
+    const vh = Math.floor(viewport.clientHeight);
+    if (vw < 40 || vh < 40) return;
+    lineH = S.size * S.leading;
+    const lines = Math.max(3, Math.floor((vh - 2) / lineH));
+    const h = Math.min(vh, Math.ceil(lines * lineH) + 1);
+    stride = vw + GAP;
+    for (const el of [flow, ghost]) {
+      el.style.width = vw + 'px';
+      el.style.height = h + 'px';
+      el.style.columnWidth = vw + 'px';
+      el.style.columnGap = GAP + 'px';
+    }
+    reader.style.setProperty('--col-px', vw + 'px');
+    viewport.scrollLeft = 0;
+    pages = Math.max(1, Math.round((viewport.scrollWidth + GAP) / stride));
+    heads = Array.from(flow.querySelectorAll('h2'), (el) => ({ p: pageOfEl(el), t: el.textContent.split(':')[0].trim() }));
+    let target = anchor ? pageOfAnchor(anchor) : null;
+    if (target === null || Number.isNaN(target)) target = Math.round(frac * (pages - 1));
+    show(clamp(target, 0, pages - 1));
+  }
+
+  function show(p) {
+    page = p;
+    viewport.scrollLeft = p * stride;
+    $('#pageNum').textContent = 'Page ' + (p + 1) + ' of ' + pages;
+    const mins = Math.round(((pages - 1 - p) * words / pages) / WPM);
+    $('#timeLeft').textContent = p === pages - 1 ? 'End of essay' : mins < 1 ? 'Under a minute left' : mins + ' min left';
+    let sec = '';
+    for (const hd of heads) if (hd.p <= p) sec = hd.t;
+    $('#rhSec').textContent = sec;
+    $('#progressFill').style.width = (pages > 1 ? p / (pages - 1) * 100 : 100) + '%';
+    S.pos = pages > 1 ? p / (pages - 1) : 0;
+    save();
+  }
+
+  let prRaf = 0;
+  function schedulePaginate() {
+    if (prRaf) return;
+    prRaf = requestAnimationFrame(() => { prRaf = 0; paginate(); });
+  }
+
+  /* ---------- Page turns ---------- */
+  function turn(d) {
+    if (busy) return;
+    const t = clamp(page + d, 0, pages - 1);
+    if (t === page) return;
+    const prev = page;
+    if (S.turn === 'eink') {
+      sinceFull += 1;
+      if (sinceFull >= S.every) { sinceFull = 0; refresh(() => show(t)); return; }
+      show(t);
+      if (S.ghost) setGhost(prev);
+    } else if (S.turn === 'fade' && !reduced()) {
+      fade(() => show(t));
+    } else {
+      show(t);
+    }
+  }
+  function jump(p) {
+    p = clamp(p, 0, pages - 1);
+    if (p === page || busy) return;
+    if (S.turn === 'eink') { sinceFull = 0; refresh(() => show(p)); } else show(p);
+  }
+  // A full refresh: the page goes dark, then blank, then shows the new page.
+  function refresh(mid) {
+    clearGhost();
+    if (reduced()) { if (mid) mid(); return; }
+    busy = true;
+    flashEl.style.background = S.flash === 'full' ? 'var(--ink)' : 'var(--flash-soft)';
+    flashEl.classList.add('on');
+    setTimeout(() => {
+      if (mid) mid();
+      flashEl.style.background = 'var(--paper)';
+      setTimeout(() => { flashEl.classList.remove('on'); busy = false; }, 80);
+    }, 120);
+  }
+  function fade(mid) {
+    busy = true;
+    flow.style.transition = 'opacity 80ms linear';
+    flow.style.opacity = '0';
+    setTimeout(() => {
+      mid();
+      flow.style.opacity = '1';
+      setTimeout(() => { flow.style.transition = ''; busy = false; }, 90);
+    }, 80);
+  }
+  function setGhost(prev) {
+    ghost.style.transform = 'translateX(' + ((page - prev) * stride) + 'px)';
+    ghost.classList.add('on');
+  }
+  function clearGhost() {
+    ghost.classList.remove('on');
+    ghost.style.transform = '';
+  }
+
+  /* ---------- Controls ---------- */
+  let pendingAnchor = null, needLayout = false, raf = 0;
+  function set(key, val) {
+    if (S[key] === val) return;
+    if (LAYOUT.has(key)) {
+      if (!needLayout) pendingAnchor = captureAnchor();
+      needLayout = true;
+    }
+    S[key] = val;
+    save();
+    if ((key === 'ghost' && !val) || (key === 'turn' && val !== 'eink')) clearGhost();
+    if (!raf) raf = requestAnimationFrame(commit);
+  }
+  function commit() {
+    raf = 0;
+    applyVars();
+    syncState();
+    renderTokens();
+    if (!needLayout) return;
+    needLayout = false;
+    const a = pendingAnchor;
+    pendingAnchor = null;
+    paginate(a);
+    const spec = WEIGHTS[S.bold] + ' ' + S.size + 'px "' + FACES[S.face].name + '"';
+    try { if (!document.fonts.check(spec)) document.fonts.load(spec).then(schedulePaginate, () => {}); } catch (e) { /* no font API */ }
+  }
+  function syncRadios() {
+    for (const n of RADIOS) {
+      const r = document.querySelector('input[name="' + n + '"][value="' + fromVal(n, S[n]) + '"]');
+      if (r) r.checked = true;
+    }
+  }
+  function syncControls() {
+    for (const k in RANGES) {
+      $('#' + k).value = S[k];
+      $('#' + k + '-out').textContent = RANGES[k](S[k]);
+    }
+    $('#face').value = S.face;
+    syncRadios();
+  }
+  function syncState() {
+    $('#einkOpts').disabled = S.turn !== 'eink';
+    $('#rmNote').hidden = !reduced();
+    $('#modeNote').hidden = S.mode !== 'auto';
+    $('#modeNote').textContent = 'Following your system theme, currently ' + (isNight() ? 'night' : 'day') + '.';
+    $('#ratio').textContent = contrast(PAL.paper, PAL.ink).toFixed(1) + ' : 1';
+    $('#faceNote').textContent = FACES[S.face].note;
+    $('#boldNote').hidden = FACES[S.face].variable;
+  }
+
+  for (const k in RANGES) {
+    const el = $('#' + k);
+    el.addEventListener('input', () => {
+      const v = k === 'leading' ? Math.round(parseFloat(el.value) * 100) / 100 : parseInt(el.value, 10);
+      $('#' + k + '-out').textContent = RANGES[k](v);
+      set(k, v);
+    });
+  }
+  $('#face').addEventListener('change', (e) => set('face', e.target.value));
+  document.addEventListener('change', (e) => {
+    const t = e.target;
+    if (t.type === 'radio' && RADIOS.includes(t.name)) set(t.name, toVal(t.name, t.value));
+  });
+
+  /* ---------- Tokens ---------- */
+  const ALIGN_DART = { ragged: 'ragged', justify: 'justified', hyphen: 'hyphenated' };
+  const HL_DART = { wash: 'wash', line: 'underline', marker: 'marker' };
+  const hlColor = (p) => S.hl === 'marker' ? p.marker : S.hl === 'line' ? p['ink-2'] : p.wash;
+  function dartTokens() {
+    const d = palette(false), n = palette(true), f = FACES[S.face], w = WEIGHTS[S.bold];
+    const c = (hex) => 'Color(0xFF' + hex.slice(1) + ')';
+    const colors = (p) => 'InkColors(\n' +
+      '    paper: ' + c(p.paper) + ',\n' +
+      '    ink: ' + c(p.ink) + ',\n' +
+      '    inkSecondary: ' + c(p['ink-2']) + ',\n' +
+      '    rule: ' + c(p.rule) + ',\n' +
+      '    highlight: ' + c(hlColor(p)) + ',\n' +
+      '  )';
+    return '// Quire ink tokens, exported from Quire Page Proof.\n' +
+      '// InkColors and the Ink* enums are defined in reader_engine.\n' +
+      "import 'dart:ui';\n\n" +
+      'abstract final class InkPalette {\n' +
+      '  static const day = ' + colors(d) + ';\n' +
+      '  static const night = ' + colors(n) + ';\n' +
+      '}\n\n' +
+      'abstract final class InkType {\n' +
+      "  static const family = '" + f.name + "';\n" +
+      '  static const size = ' + S.size.toFixed(1) + ';\n' +
+      '  static const weight = ' + w + ';' + (f.variable ? '' : ' // two-weight face: renders as ' + (w > 500 ? 700 : 400)) + '\n' +
+      '  static const height = ' + S.leading.toFixed(2) + '; // TextStyle.height\n' +
+      '  static const measureCh = ' + S.measure + ';\n' +
+      '  static const margin = ' + S.margin.toFixed(1) + ';\n' +
+      '  static const align = InkAlign.' + ALIGN_DART[S.align] + ';\n' +
+      '  static const paragraphs = InkParagraphs.' + (S.paras === 'indent' ? 'indented' : 'spaced') + ';\n' +
+      '}\n\n' +
+      'abstract final class InkMotion {\n' +
+      '  static const pageTurn = InkTurn.' + S.turn + ';\n' +
+      '  static const fullRefreshEvery = ' + S.every + ';\n' +
+      '  static const flash = InkFlash.' + S.flash + ';\n' +
+      '  static const ghosting = ' + S.ghost + ';\n' +
+      '  static const grainOpacity = ' + (S.grain / 100).toFixed(2) + ';\n' +
+      '  static const highlight = InkHighlight.' + HL_DART[S.hl] + ';\n' +
+      '}\n';
+  }
+  function jsonTokens() {
+    const pick = (p) => ({ paper: p.paper, ink: p.ink, inkSecondary: p['ink-2'], rule: p.rule, highlight: hlColor(p) });
+    return JSON.stringify({
+      palette: { day: pick(palette(false)), night: pick(palette(true)) },
+      type: { family: FACES[S.face].name, size: S.size, weight: WEIGHTS[S.bold], height: S.leading, measureCh: S.measure, margin: S.margin, align: S.align, paragraphs: S.paras },
+      motion: { pageTurn: S.turn, fullRefreshEvery: S.every, flash: S.flash, ghosting: S.ghost, grainOpacity: S.grain / 100, highlight: S.hl },
+      sliders: { frontLight: S.light, warmth: S.warmth, inkDarkness: S.inkLevel },
+    }, null, 2) + '\n';
+  }
+  function renderTokens() {
+    if (panel.hidden) return;
+    $('#tokensCode').textContent = S.fmt === 'json' ? jsonTokens() : dartTokens();
+  }
+  function relabel(btn, text) {
+    if (!btn.dataset.label) btn.dataset.label = btn.textContent;
+    btn.textContent = text;
+    clearTimeout(btn._timer);
+    btn._timer = setTimeout(() => { btn.textContent = btn.dataset.label; }, 1600);
+  }
+  $('#copyTokens').addEventListener('click', (e) => {
+    const btn = e.currentTarget, code = $('#tokensCode');
+    const selectCode = () => {
+      const r = document.createRange();
+      r.selectNodeContents(code);
+      const sel = getSelection();
+      sel.removeAllRanges();
+      sel.addRange(r);
+      relabel(btn, 'Selected, copy it now');
+    };
+    try {
+      navigator.clipboard.writeText(code.textContent).then(() => relabel(btn, 'Copied'), selectCode);
+    } catch (err) { selectCode(); }
+  });
+  $('#resetAll').addEventListener('click', (e) => {
+    const a = captureAnchor();
+    S = { ...DEFAULTS, panel: S.panel, pos: S.pos };
+    save();
+    syncControls();
+    applyVars();
+    syncState();
+    renderTokens();
+    paginate(a);
+    relabel(e.currentTarget, 'Defaults restored');
+  });
+
+  /* ---------- Panel and compare ---------- */
+  function setPanel(open, focus) {
+    panel.hidden = !open;
+    app.dataset.panel = open ? 'open' : 'closed';
+    $('#tuneBtn').setAttribute('aria-expanded', String(open));
+    S.panel = open;
+    save();
+    if (open) renderTokens();
+    if (focus) (open ? $('#panelClose') : $('#tuneBtn')).focus();
+  }
+  $('#panelClose').addEventListener('click', () => setPanel(false, true));
+  $('#tuneBtn').addEventListener('click', () => setPanel(true, true));
+  $('#refreshNow').addEventListener('click', () => { sinceFull = 0; refresh(null); });
+
+  function openCompare() {
+    const text = flow.querySelector('[data-cmp]').textContent.trim();
+    for (const box of compare.querySelectorAll('.cmp-text')) box.textContent = text;
+    compare.hidden = false;
+    app.inert = true;
+    $('#cmpClose').focus();
+  }
+  function closeCompare() {
+    compare.hidden = true;
+    app.inert = false;
+    $('#cmpOpen').focus();
+  }
+  $('#cmpOpen').addEventListener('click', openCompare);
+  $('#cmpClose').addEventListener('click', closeCompare);
+  compare.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-use]');
+    if (!b) return;
+    set('align', b.dataset.use);
+    syncRadios();
+    closeCompare();
+  });
+
+  /* ---------- Input ---------- */
+  let swiped = false;
+  reader.addEventListener('click', (e) => {
+    if (swiped) { swiped = false; return; }
+    if (e.target.closest('button, a, input, select, label')) return;
+    const sel = getSelection();
+    if (sel && !sel.isCollapsed && reader.contains(sel.anchorNode)) return;
+    const r = reader.getBoundingClientRect();
+    if (e.clientY - r.top < Math.max(48, r.height * 0.08)) { set('chrome', !S.chrome); syncRadios(); return; }
+    turn((e.clientX - r.left) / r.width < 0.33 ? -1 : 1);
+  });
+
+  let sx = 0, sy = 0;
+  reader.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') { sx = e.clientX; sy = e.clientY; } });
+  reader.addEventListener('pointerup', (e) => {
+    if (e.pointerType === 'mouse') return;
+    const dx = e.clientX - sx, dy = e.clientY - sy;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.3) { swiped = true; turn(dx < 0 ? 1 : -1); }
+  });
+
+  // Trackpads send a long tail of momentum events; hold the lock while that
+  // stream continues so one swipe turns exactly one page.
+  let wheelAcc = 0, wheelLock = 0;
+  reader.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const scale = e.deltaMode === 1 ? 16 : 1;
+    const d = (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY) * scale;
+    if (e.timeStamp < wheelLock) { if (Math.abs(d) < 40) wheelLock = e.timeStamp + 160; return; }
+    wheelAcc += d;
+    if (Math.abs(wheelAcc) > 50) { turn(wheelAcc > 0 ? 1 : -1); wheelAcc = 0; wheelLock = e.timeStamp + 380; }
+  }, { passive: false });
+
+  // Find-in-page and selection drags can scroll the page box; snap to a page.
+  viewport.addEventListener('scroll', () => {
+    if (!stride) return;
+    const want = page * stride;
+    if (Math.abs(viewport.scrollLeft - want) < 2 && viewport.scrollTop === 0) return;
+    viewport.scrollTop = 0;
+    const p = clamp(Math.round(viewport.scrollLeft / stride), 0, pages - 1);
+    if (p !== page) { clearGhost(); show(p); } else viewport.scrollLeft = want;
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (!compare.hidden) {
+      if (e.key === 'Escape') { e.preventDefault(); closeCompare(); }
+      return;
+    }
+    const t = e.target;
+    if (t.closest && t.closest('input, select, textarea, pre')) { if (e.key === 'Escape') t.blur(); return; }
+    if (t.closest && t.closest('button') && (e.key === ' ' || e.key === 'Enter')) return;
+    switch (e.key) {
+      case 'ArrowRight': case 'PageDown': case 'j': turn(1); break;
+      case 'ArrowLeft': case 'PageUp': case 'k': turn(-1); break;
+      case ' ': turn(e.shiftKey ? -1 : 1); break;
+      case 'Home': jump(0); break;
+      case 'End': jump(pages - 1); break;
+      case 't': case 'T': setPanel(panel.hidden, false); break;
+      case 'c': case 'C': set('chrome', !S.chrome); syncRadios(); break;
+      case 'n': case 'N': set('mode', isNight() ? 'day' : 'night'); syncRadios(); break;
+      case 'r': case 'R': sinceFull = 0; refresh(null); break;
+      case 'Escape': if (panel.hidden) return; setPanel(false, true); break;
+      default: return;
+    }
+    e.preventDefault();
+  });
+
+  const onTheme = () => { if (S.mode === 'auto') { applyVars(); syncState(); renderTokens(); } };
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onTheme);
+  new MutationObserver(onTheme).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+  matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', syncState);
+
+  // Some browsers ship without hyphenation dictionaries and silently ignore
+  // hyphens:auto. Detect that so the Hyphens option never looks like a no-op.
+  function hyphenationWorks() {
+    const probe = document.createElement('div');
+    probe.lang = 'en';
+    probe.style.cssText = 'position:absolute;visibility:hidden;left:-9999px;top:0;width:5ch;font:16px Georgia,serif;-webkit-hyphens:auto;hyphens:auto';
+    probe.textContent = 'incomprehensibilities';
+    document.body.appendChild(probe);
+    const auto = probe.offsetHeight;
+    probe.style.webkitHyphens = 'manual';
+    probe.style.hyphens = 'manual';
+    const manual = probe.offsetHeight;
+    probe.remove();
+    return auto > manual;
+  }
+
+  /* ---------- Start ---------- */
+  if (!hyphenationWorks()) { $('#hyphNote').hidden = false; $('#hyphNote2').hidden = false; }
+  ghost.innerHTML = flow.innerHTML;
+  syncControls();
+  applyVars();
+  syncState();
+  setPanel(S.panel === null ? matchMedia('(min-width: 721px)').matches : S.panel, false);
+  paginate(null);
+  if (document.fonts) {
+    document.fonts.ready.then(schedulePaginate);
+    document.fonts.addEventListener('loadingdone', schedulePaginate);
+  }
+  new ResizeObserver(schedulePaginate).observe(viewport);
+})();
+</script>
