@@ -21,6 +21,8 @@ type RequestFormProps<K extends RequestKind> = {
   kind: K;
   defaultValues: DefaultValues<RequestInput<K>>;
   submitLabel: string;
+  /** Heading of the confirmation panel. */
+  successTitle?: string;
   children: ReactNode;
   className?: string;
 };
@@ -36,6 +38,7 @@ export function RequestForm<K extends RequestKind>({
   kind,
   defaultValues,
   submitLabel,
+  successTitle,
   children,
   className,
 }: RequestFormProps<K>) {
@@ -71,6 +74,7 @@ export function RequestForm<K extends RequestKind>({
     return (
       <SubmissionSuccess
         result={result}
+        title={successTitle}
         onReset={() => {
           reset(defaultValues);
           setResult(null);

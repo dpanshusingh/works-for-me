@@ -24,12 +24,38 @@ export function ServiceArt({
   className,
 }: {
   service: Service;
-  size?: "card" | "hero";
+  size?: "card" | "hero" | "thumb";
   priority?: boolean;
   className?: string;
 }) {
   const tone = tones[service.tone];
   const hero = size === "hero";
+
+  if (size === "thumb") {
+    return (
+      <div
+        role="img"
+        aria-label={`${service.title} illustration`}
+        className={cn("relative flex items-center justify-center overflow-hidden", className)}
+        style={
+          service.photo
+            ? undefined
+            : { backgroundImage: `linear-gradient(135deg, ${tone.from} 0%, ${tone.to} 100%)` }
+        }
+      >
+        {service.photo ? (
+          <Image src={service.photo} alt="" fill sizes="96px" className="object-cover" />
+        ) : (
+          <>
+            <span aria-hidden className="absolute -top-4 -right-4 size-12 rounded-full bg-white/15" />
+            <span className="flex size-[58%] items-center justify-center rounded-[30%] bg-white shadow-md">
+              <ServiceIcon name={service.icon} className="size-[55%]" style={{ color: tone.ink }} strokeWidth={1.8} />
+            </span>
+          </>
+        )}
+      </div>
+    );
+  }
 
   if (service.photo) {
     return (

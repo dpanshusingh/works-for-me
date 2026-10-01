@@ -15,7 +15,7 @@ const links = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
   { href: "/services/medicine-delivery", label: "Medicine Delivery", badge: "Express" },
-  { href: "/services/lab-test", label: "Book Lab Test" },
+  { href: "/reviews", label: "Reviews" },
   { href: "/contact", label: "Contact Us" },
 ] as const;
 

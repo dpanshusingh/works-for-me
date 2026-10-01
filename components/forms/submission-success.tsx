@@ -19,9 +19,11 @@ export type SubmissionResult = {
 export function SubmissionSuccess({
   result,
   onReset,
+  title = "Your request is ready",
 }: {
   result: SubmissionResult;
   onReset: () => void;
+  title?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(result.copied);
@@ -50,7 +52,7 @@ export function SubmissionSuccess({
         <span className="flex size-16 animate-pop items-center justify-center rounded-full bg-secondary-strong text-white shadow-lg shadow-secondary/30">
           <CheckCircle2 className="size-9" />
         </span>
-        <h3 className="mt-4 text-xl font-bold sm:text-2xl">Your request is ready</h3>
+        <h3 className="mt-4 text-xl font-bold sm:text-2xl">{title}</h3>
         <p className="mt-1 text-sm text-slate-600">
           Reference{" "}
           <span className="rounded-md bg-white px-2 py-0.5 font-mono font-semibold tracking-wider text-primary ring-1 ring-line">

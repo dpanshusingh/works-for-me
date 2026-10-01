@@ -303,6 +303,25 @@ export const ContactFormSchema = z.object({
   message: z.string().trim().min(10, "Please write a few words about how we can help"),
 });
 
+// Reviews page — "Share your experience"
+export const ReviewFormSchema = z.object({
+  fullName: z.string().trim().min(2, "Please tell us your name"),
+  phone: PatientInfoSchema.shape.phone,
+  locality: z.string().max(60).optional(),
+  serviceType: z.enum(SERVICE_TYPES, { error: "Please choose the service you used" }),
+  rating: z.coerce
+    .number("Please choose a star rating")
+    .int()
+    .min(1, "Please choose a star rating")
+    .max(5, "Please choose a star rating"),
+  review: z
+    .string()
+    .trim()
+    .min(10, "Please write at least a sentence about your experience")
+    .max(1000, "Keep it under 1000 characters"),
+  consentToPublish: z.boolean().default(false),
+});
+
 /* ================================================================== */
 /* Request registry — shared by the forms and POST /api/requests       */
 /* ================================================================== */
@@ -316,6 +335,7 @@ export const requestSchemas = {
   diabetic_care: DiabeticCareFormSchema,
   appointment: AppointmentFormSchema,
   contact: ContactFormSchema,
+  review: ReviewFormSchema,
 } as const;
 
 export type RequestKind = keyof typeof requestSchemas;
@@ -332,6 +352,7 @@ export type NursingCareRequest = RequestData<"nursing_care">;
 export type DiabeticCareRequest = RequestData<"diabetic_care">;
 export type AppointmentRequest = RequestData<"appointment">;
 export type ContactRequest = RequestData<"contact">;
+export type ReviewSubmission = RequestData<"review">;
 
 /* ================================================================== */
 /* Helpers                                                             */

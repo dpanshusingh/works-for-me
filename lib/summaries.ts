@@ -38,6 +38,8 @@ export type RequestSummary = {
   sections: SummarySection[];
   /** Extra lines appended to the WhatsApp message (e.g. "attaching prescription"). */
   notes: string[];
+  /** Last line of the message; defaults to asking for confirmation. */
+  closing?: string;
 };
 
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -361,6 +363,36 @@ const builders: Builders = {
     };
   },
 
+  review(d) {
+    return {
+      heading: "Patient Review",
+      sections: [
+        {
+          title: "Review",
+          rows: [
+            ["Rating", `${"★".repeat(d.rating)}${"☆".repeat(5 - d.rating)} (${d.rating}/5)`],
+            ["Service", serviceTitleByType[d.serviceType]],
+            ["Review", d.review],
+          ],
+        },
+        {
+          title: "From",
+          rows: [
+            ["Name", d.fullName],
+            ["Locality", d.locality],
+            ["Mobile", formatIndianPhone(d.phone)],
+            [
+              "Publish on website",
+              d.consentToPublish ? "Yes — first name, locality and review" : "No — private feedback",
+            ],
+          ],
+        },
+      ],
+      notes: [],
+      closing: "Thank you!",
+    };
+  },
+
   contact(d) {
     return {
       heading: "Website Enquiry",
@@ -409,6 +441,6 @@ export function summaryToText(summary: RequestSummary) {
     }
   }
   if (summary.notes.length) lines.push("", ...summary.notes);
-  lines.push("", "Please confirm my request. Thank you!");
+  lines.push("", summary.closing ?? "Please confirm my request. Thank you!");
   return lines.join("\n");
 }

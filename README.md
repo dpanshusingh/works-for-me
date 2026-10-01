@@ -47,6 +47,7 @@ Copy `.env.example` to `.env.local`.
 | `/`                  | Hero (with email, call and location), how it works, "Book an appointment on…" strip |
 | `/services`          | All 12 services as cards — the "Services" menu item opens this page             |
 | `/services/[slug]`   | Service details + the matching booking form (12 static pages)                    |
+| `/reviews`           | Published patient reviews (from `lib/reviews.ts`) and a "Share your experience" form |
 | `/contact`           | Contact channels, map, enquiry form                                              |
 | `POST /api/requests` | Re-validates a submission with its zod schema and forwards it to the webhook     |
 
@@ -66,6 +67,7 @@ and — on phones — a fixed bottom bar with **Call Now**, **WhatsApp Order** a
 | General appointment                     | Physiotherapy, Nutrition, Counseling, Yoga, Dental            |
 | Universal Quick Book modal              | "Quick Book", hero, mobile bar and CTA strip on every page    |
 | Contact enquiry                         | Contact page                                                  |
+| Patient review (star rating)            | Reviews page                                                  |
 
 What happens on submit (`components/forms/request-form.tsx`):
 
@@ -82,6 +84,8 @@ included in the message and the visitor is reminded to attach the file in the Wh
 
 - **Contact details, hours, location** — `lib/site.ts`
 - **Services** (names, copy, inclusions, form used) — `lib/services.ts`
+- **Reviews shown on /reviews** — `lib/reviews.ts` (starts empty: add only real reviews that patients
+  agreed to publish, e.g. ones received through the review form)
 - **Dropdown options** (Goa localities, tests, equipment, time slots…) — `lib/options.ts`
 - **Validation rules** — `schemas/healthcare.ts`
 - **Brand colours and fonts** — `@theme` block in `app/globals.css`, fonts in `app/layout.tsx`

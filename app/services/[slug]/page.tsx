@@ -184,7 +184,7 @@ export default async function ServicePage({ params }: Props) {
               View all 12 services →
             </Link>
           </div>
-          <div className="mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-6 grid gap-3 md:mt-8 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
             {related.map((s, i) => (
               <ServiceCard key={s.slug} service={s} style={revealDelay(i)} />
             ))}

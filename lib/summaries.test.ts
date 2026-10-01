@@ -54,3 +54,22 @@ describe("medicine order summary", () => {
     expect(text).toContain("I will share my prescription (rx.jpg) in this chat.");
   });
 });
+
+describe("review summary", () => {
+  it("shows the rating as stars and the publishing choice", async () => {
+    const { ReviewFormSchema } = await import("@/schemas/healthcare");
+    const review = ReviewFormSchema.parse({
+      fullName: "Maria Fernandes",
+      phone: "9923120649",
+      locality: "Porvorim",
+      serviceType: "nursing_elder_care",
+      rating: "4",
+      review: "The nurse was punctual and very caring with my mother.",
+      consentToPublish: false,
+    });
+    const text = summaryToText(buildSummary("review", review, "HHH-REV234"));
+    expect(text).toContain("• Rating: ★★★★☆ (4/5)");
+    expect(text).toContain("• Service: Nursing/Elder Care");
+    expect(text).toContain("• Publish on website: No — private feedback");
+  });
+});

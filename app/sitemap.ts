@@ -3,7 +3,7 @@ import { services } from "@/lib/services";
 import { site } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const pages = ["", "/services", "/contact", ...services.map((s) => `/services/${s.slug}`)];
+  const pages = ["", "/services", "/reviews", "/contact", ...services.map((s) => `/services/${s.slug}`)];
   return pages.map((path) => ({
     url: `${site.url}${path}`,
     changeFrequency: "monthly",

@@ -166,3 +166,14 @@ describe("AppointmentFormSchema", () => {
     expect(pathsOf(AppointmentFormSchema.safeParse({ ...patient, serviceType: "surgery" }))).toContain("serviceType");
   });
 });
+
+describe("ReviewFormSchema", () => {
+  it("requires a 1–5 star rating and a real review", async () => {
+    const { ReviewFormSchema } = await import("./healthcare");
+    const base = { fullName: "Asha", phone: "9876543210", serviceType: "lab_test", review: "Quick and painless sample collection." };
+    expect(ReviewFormSchema.safeParse({ ...base, rating: "5" }).success).toBe(true);
+    expect(pathsOf(ReviewFormSchema.safeParse({ ...base, rating: "" }))).toEqual(["rating"]);
+    expect(pathsOf(ReviewFormSchema.safeParse({ ...base, rating: "6" }))).toEqual(["rating"]);
+    expect(pathsOf(ReviewFormSchema.safeParse({ ...base, rating: "3", review: "ok" }))).toEqual(["review"]);
+  });
+});

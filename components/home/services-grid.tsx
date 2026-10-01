@@ -21,7 +21,7 @@ export function ServicesGrid({
     <section className={cn("py-16 sm:py-20", className)} aria-labelledby="services-heading">
       <div className="mx-auto max-w-6xl px-4 lg:px-6">
         <SectionHeading id="services-heading" title={title} description={description} as={headingAs} />
-        <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid grid-cols-1 gap-3 md:mt-12 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
           {items.map((service, i) => (
             <ServiceCard key={service.slug} service={service} style={revealDelay(i % 3)} />
           ))}
