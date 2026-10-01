@@ -6,7 +6,6 @@ import { QuickBookDialog } from "@/components/booking/quick-book-dialog";
 import { Footer } from "@/components/layout/footer";
 import { MobileActionBar } from "@/components/layout/mobile-action-bar";
 import { Navbar } from "@/components/layout/navbar";
-import { TopBar } from "@/components/layout/top-bar";
 import { services } from "@/lib/services";
 import { site } from "@/lib/site";
 import "./globals.css";
@@ -85,7 +84,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         >
           Skip to content
         </a>
-        <TopBar />
         <Navbar />
         <main id="main">
           {children}

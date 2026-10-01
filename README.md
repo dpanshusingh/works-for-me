@@ -44,13 +44,13 @@ Copy `.env.example` to `.env.local`.
 
 | Route                | Contents                                                                         |
 | -------------------- | -------------------------------------------------------------------------------- |
-| `/`                  | Hero, 12-card services grid, how it works, "Book an appointment on…" strip       |
-| `/services`          | All services                                                                     |
+| `/`                  | Hero (with email, call and location), how it works, "Book an appointment on…" strip |
+| `/services`          | All 12 services as cards — the "Services" menu item opens this page             |
 | `/services/[slug]`   | Service details + the matching booking form (12 static pages)                    |
 | `/contact`           | Contact channels, map, enquiry form                                              |
 | `POST /api/requests` | Re-validates a submission with its zod schema and forwards it to the webhook     |
 
-Every page shares the top information bar, sticky navbar (services dropdown, Quick Book), footer
+Every page shares the sticky navbar (with Quick Book), a fade-in transition between pages, the footer
 and — on phones — a fixed bottom bar with **Call Now**, **WhatsApp Order** and **Book Home Visit**.
 
 ## Forms

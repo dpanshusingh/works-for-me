@@ -1,10 +1,22 @@
-import { ArrowRight, BadgeCheck, CalendarPlus, Home, MessageCircle, Phone } from "lucide-react";
+import { ArrowRight, BadgeCheck, CalendarPlus, Home, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import Link from "next/link";
 import { OpenBookingButton } from "@/components/booking/open-booking-button";
 import { HeroBackdrop } from "@/components/home/hero-backdrop";
 import { buttonVariants } from "@/components/ui/button";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
+
+const contacts = [
+  { icon: Mail, label: "Send us a Mail", value: site.email, href: `mailto:${site.email}` },
+  { icon: Phone, label: "Call Us Directly", value: site.phone.display, href: site.phone.tel, primary: true },
+  {
+    icon: MapPin,
+    label: "Our Location",
+    value: site.location.label,
+    href: site.location.mapLink,
+    external: true,
+  },
+];
 
 const assurances = [
   { icon: BadgeCheck, label: "Expert & trained partners" },
@@ -23,12 +35,7 @@ export function Hero() {
       />
 
       <div className="mx-auto flex min-h-[540px] max-w-5xl flex-col items-center justify-center px-4 py-20 text-center sm:min-h-[600px] lg:min-h-[660px] lg:py-28">
-        <p className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-[13px] font-semibold text-emerald-200 backdrop-blur-sm">
-          <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_0_4px_rgb(52_211_153/0.25)]" />
-          Doorstep healthcare across Goa<span className="hidden sm:inline"> · {site.motto}</span>
-        </p>
-
-        <h1 className="animate-fade-up mt-6 font-heading text-[2.15rem] leading-[1.08] font-extrabold tracking-tight text-white uppercase [animation-delay:80ms] sm:text-5xl lg:text-[3.6rem]">
+        <h1 className="animate-fade-up font-heading text-[2.15rem] leading-[1.08] font-extrabold tracking-tight text-white uppercase [animation-delay:80ms] sm:text-5xl lg:text-[3.6rem]">
           Medical services that you can trust
         </h1>
 
@@ -49,18 +56,39 @@ export function Hero() {
           </Link>
         </div>
 
-        <a
-          href={site.phone.tel}
-          className="animate-fade-up group mt-7 inline-flex items-center gap-3 text-white [animation-delay:320ms]"
-        >
-          <span className="flex size-11 items-center justify-center rounded-full bg-secondary-strong shadow-lg ring-4 ring-emerald-400/20 transition-transform group-hover:scale-105">
-            <Phone className="size-5" />
-          </span>
-          <span className="text-left leading-tight">
-            <span className="block text-[13px] text-slate-300">Call Us Directly</span>
-            <span className="block font-heading text-lg font-bold tracking-wide">{site.phone.display}</span>
-          </span>
-        </a>
+        <ul className="animate-fade-up mt-9 flex flex-col items-center gap-4 [animation-delay:320ms] md:flex-row md:gap-12">
+          {contacts.map(({ icon: Icon, label, value, href, external, primary }) => (
+            <li key={label} className={cn("flex justify-center", primary && "order-first md:order-none")}>
+              <a
+                href={href}
+                {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                className="group inline-flex min-w-0 items-center gap-3 text-white"
+              >
+                <span
+                  className={cn(
+                    "flex shrink-0 items-center justify-center rounded-full shadow-lg transition-transform group-hover:scale-105",
+                    primary
+                      ? "size-12 bg-secondary-strong ring-4 ring-emerald-400/20"
+                      : "size-10 bg-white/10 ring-1 ring-white/25 backdrop-blur-sm",
+                  )}
+                >
+                  <Icon className={primary ? "size-5" : "size-[18px]"} />
+                </span>
+                <span className="min-w-0 text-left leading-tight">
+                  <span className="block text-[13px] text-slate-300">{label}</span>
+                  <span
+                    className={cn(
+                      "block font-semibold break-all sm:break-normal",
+                      primary ? "font-heading text-lg font-bold tracking-wide" : "text-[15px] group-hover:underline",
+                    )}
+                  >
+                    {value}
+                  </span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
 
         <ul className="animate-fade-up mt-10 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[13px] font-medium text-slate-300 [animation-delay:400ms]">
           {assurances.map(({ icon: Icon, label }) => (
