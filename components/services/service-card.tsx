@@ -2,13 +2,14 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { ServiceArt } from "@/components/services/service-art";
 import { buttonVariants } from "@/components/ui/button";
+import type { CSSProperties } from "react";
 import type { Service } from "@/lib/services";
 import { cn } from "@/lib/utils";
 
-export function ServiceCard({ service }: { service: Service }) {
+export function ServiceCard({ service, style }: { service: Service; style?: CSSProperties }) {
   const href = `/services/${service.slug}`;
   return (
-    <article className="group flex flex-col overflow-hidden rounded-xl border border-line bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-card-hover">
+    <article style={style} className="reveal group flex flex-col overflow-hidden rounded-xl border border-line bg-white shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-card-hover">
       <Link href={href} tabIndex={-1} aria-hidden className="block overflow-hidden rounded-t-xl">
         <ServiceArt service={service} />
       </Link>

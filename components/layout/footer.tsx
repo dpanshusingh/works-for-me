@@ -1,6 +1,7 @@
 import { Clock, Mail, MapPin, MessageCircle, PhoneCall, Siren } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/layout/logo";
+import { revealDelay } from "@/lib/reveal";
 import { services } from "@/lib/services";
 import { defaultWhatsappGreeting, site, whatsappUrl } from "@/lib/site";
 
@@ -8,7 +9,7 @@ export function Footer() {
   return (
     <footer className="bg-[#0f1b2d] text-slate-300">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 pt-14 pb-10 sm:grid-cols-2 lg:grid-cols-[1.3fr_1.6fr_1fr] lg:px-6">
-        <div>
+        <div className="reveal">
           <div className="inline-block rounded-xl bg-white px-3 py-2.5">
             <Logo />
           </div>
@@ -22,7 +23,7 @@ export function Footer() {
           </p>
         </div>
 
-        <div>
+        <div className="reveal" style={revealDelay(1)}>
           <h2 className="font-heading text-sm font-bold tracking-wider text-white uppercase">Our Services</h2>
           <ul className="mt-4 grid grid-cols-1 gap-x-6 gap-y-2.5 text-sm sm:grid-cols-2">
             {services.map((s) => (
@@ -35,7 +36,7 @@ export function Footer() {
           </ul>
         </div>
 
-        <div>
+        <div className="reveal" style={revealDelay(2)}>
           <h2 className="font-heading text-sm font-bold tracking-wider text-white uppercase">Get in Touch</h2>
           <ul className="mt-4 space-y-3.5 text-sm">
             <li>

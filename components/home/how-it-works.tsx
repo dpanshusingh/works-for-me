@@ -1,5 +1,6 @@
 import { HeartPulse, MessageCircle, PhoneCall } from "lucide-react";
 import { SectionHeading } from "@/components/home/section-heading";
+import { revealDelay } from "@/lib/reveal";
 
 const steps = [
   {
@@ -28,7 +29,7 @@ export function HowItWorks() {
           {steps.map((step, i) => {
             const Icon = step.icon;
             return (
-              <li key={step.title} className="relative rounded-2xl border border-line bg-white p-6 shadow-card">
+              <li key={step.title} style={revealDelay(i)} className="reveal relative rounded-2xl border border-line bg-white p-6 shadow-card">
                 <span className="absolute top-5 right-6 font-heading text-5xl font-extrabold text-primary-tint select-none" aria-hidden>
                   0{i + 1}
                 </span>

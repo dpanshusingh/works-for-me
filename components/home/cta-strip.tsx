@@ -11,14 +11,14 @@ import { defaultWhatsappGreeting, site, whatsappUrl } from "@/lib/site";
 export function CtaStrip() {
   const openBooking = useBookingStore((s) => s.openBooking);
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-[#f1f5f9] via-primary-tint to-[#f1f5f9] py-14 sm:py-16">
+    <section className="relative overflow-clip bg-gradient-to-br from-[#f1f5f9] via-primary-tint to-[#f1f5f9] py-14 sm:py-16">
       <svg aria-hidden className="absolute -top-10 -left-10 size-52 text-primary/5" viewBox="0 0 100 100">
         <path d="M38 0h24v38h38v24H62v38H38V62H0V38h38z" fill="currentColor" />
       </svg>
       <svg aria-hidden className="absolute -right-8 -bottom-12 size-56 text-secondary/10" viewBox="0 0 100 100">
         <path d="M38 0h24v38h38v24H62v38H38V62H0V38h38z" fill="currentColor" />
       </svg>
-      <div className="relative mx-auto max-w-4xl px-4 text-center">
+      <div className="reveal-zoom relative mx-auto max-w-4xl px-4 text-center">
         <a
           href={site.phone.tel}
           onClick={(e) => {

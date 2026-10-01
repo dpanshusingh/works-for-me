@@ -7,6 +7,7 @@ import { ServiceForm } from "@/components/forms/service-form";
 import { ServiceArt } from "@/components/services/service-art";
 import { ServiceCard } from "@/components/services/service-card";
 import { buttonVariants } from "@/components/ui/button";
+import { revealDelay } from "@/lib/reveal";
 import { getService, services } from "@/lib/services";
 import { site, whatsappUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -47,7 +48,7 @@ export default async function ServicePage({ params }: Props) {
   return (
     <>
       {/* Header */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-primary-tint/70 to-white">
+      <section className="relative overflow-clip bg-gradient-to-b from-primary-tint/70 to-white">
         <div className="mx-auto max-w-6xl px-4 pt-6 pb-14 lg:px-6 lg:pb-20">
           <nav aria-label="Breadcrumb" className="mb-8 text-[13px] text-slate-500">
             <ol className="flex flex-wrap items-center gap-1">
@@ -70,7 +71,7 @@ export default async function ServicePage({ params }: Props) {
           </nav>
 
           <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
-            <div>
+            <div className="reveal-left">
               <p className="text-[13px] font-bold tracking-widest text-secondary-strong uppercase">
                 At-home service · Goa
               </p>
@@ -108,15 +109,15 @@ export default async function ServicePage({ params }: Props) {
               </div>
             </div>
 
-            <ServiceArt service={service} size="hero" priority className="rounded-2xl shadow-2xl shadow-primary/20" />
+            <ServiceArt service={service} size="hero" priority className="reveal-right rounded-2xl shadow-2xl shadow-primary/20" />
           </div>
         </div>
       </section>
 
       {/* Booking form */}
-      <section id="book" className="border-t border-line bg-canvas py-14 sm:py-20" aria-labelledby="form-heading">
+      <section id="book" className="overflow-x-clip border-t border-line bg-canvas py-14 sm:py-20" aria-labelledby="form-heading">
         <div className="mx-auto grid max-w-6xl gap-8 px-4 lg:grid-cols-[minmax(0,1fr)_320px] lg:px-6">
-          <div className="rounded-2xl border border-line bg-white p-5 shadow-card sm:p-8">
+          <div className="reveal rounded-2xl border border-line bg-white p-5 shadow-card sm:p-8">
             <h2 id="form-heading" className="text-2xl font-bold">
               {service.formTitle}
             </h2>
@@ -127,7 +128,7 @@ export default async function ServicePage({ params }: Props) {
           </div>
 
           <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
-            <div className="rounded-2xl bg-primary p-6 text-white shadow-lg shadow-primary/25">
+            <div className="reveal-right rounded-2xl bg-primary p-6 text-white shadow-lg shadow-primary/25">
               <h3 className="font-heading text-lg font-bold text-white">Need help booking?</h3>
               <p className="mt-1.5 text-sm text-blue-100">Talk to our care team — we&apos;ll fill it in for you.</p>
               <div className="mt-5 space-y-2.5">
@@ -148,7 +149,7 @@ export default async function ServicePage({ params }: Props) {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-line bg-white p-6">
+            <div style={revealDelay(1)} className="reveal-right rounded-2xl border border-line bg-white p-6">
               <h3 className="flex items-center gap-2 text-base font-bold">
                 <ShieldCheck className="size-5 text-secondary-strong" /> What happens next
               </h3>
@@ -164,7 +165,7 @@ export default async function ServicePage({ params }: Props) {
               </ol>
             </div>
 
-            <p className="flex items-start gap-2.5 rounded-xl bg-red-50 p-4 text-[13px] text-red-800 ring-1 ring-red-200">
+            <p style={revealDelay(2)} className="reveal-right flex items-start gap-2.5 rounded-xl bg-red-50 p-4 text-[13px] text-red-800 ring-1 ring-red-200">
               <Siren className="mt-0.5 size-4 shrink-0 text-red-600" />
               Medical emergency? Call {site.emergencyNumber} for an ambulance or go to the nearest hospital.
             </p>
@@ -175,7 +176,7 @@ export default async function ServicePage({ params }: Props) {
       {/* Related */}
       <section className="py-16 sm:py-20" aria-labelledby="related-heading">
         <div className="mx-auto max-w-6xl px-4 lg:px-6">
-          <div className="flex items-end justify-between gap-4">
+          <div className="reveal flex items-end justify-between gap-4">
             <h2 id="related-heading" className="text-2xl font-bold">
               Other services
             </h2>
@@ -184,8 +185,8 @@ export default async function ServicePage({ params }: Props) {
             </Link>
           </div>
           <div className="mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {related.map((s) => (
-              <ServiceCard key={s.slug} service={s} />
+            {related.map((s, i) => (
+              <ServiceCard key={s.slug} service={s} style={revealDelay(i)} />
             ))}
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { SectionHeading } from "@/components/home/section-heading";
 import { ServiceCard } from "@/components/services/service-card";
 import { services, type Service } from "@/lib/services";
+import { revealDelay } from "@/lib/reveal";
 import { cn } from "@/lib/utils";
 
 export function ServicesGrid({
@@ -21,8 +22,8 @@ export function ServicesGrid({
       <div className="mx-auto max-w-6xl px-4 lg:px-6">
         <SectionHeading id="services-heading" title={title} description={description} as={headingAs} />
         <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {items.map((service) => (
-            <ServiceCard key={service.slug} service={service} />
+          {items.map((service, i) => (
+            <ServiceCard key={service.slug} service={service} style={revealDelay(i % 3)} />
           ))}
         </div>
       </div>

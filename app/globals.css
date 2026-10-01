@@ -136,3 +136,66 @@
     }
   }
 }
+
+/*
+ * Scroll reveal: sections and cards glide in as they scroll into view.
+ * Uses CSS scroll-driven animations (Chrome, Edge, Safari 26+, Android);
+ * other browsers and reduced-motion users simply see the content.
+ * Stagger siblings with revealDelay(i) from lib/reveal.ts.
+ */
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+}
+@keyframes reveal-left {
+  from {
+    opacity: 0;
+    transform: translateX(-48px);
+  }
+}
+@keyframes reveal-right {
+  from {
+    opacity: 0;
+    transform: translateX(48px);
+  }
+}
+@keyframes reveal-zoom {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+}
+
+@layer components {
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal,
+      .reveal-left,
+      .reveal-right,
+      .reveal-zoom {
+        animation: reveal-up ease-out both;
+        animation-timeline: view();
+        /* fixed distance so tall blocks (the booking forms) finish appearing quickly */
+        animation-range: entry var(--reveal-delay, 0px) entry calc(200px + var(--reveal-delay, 0px));
+      }
+      .reveal-left {
+        animation-name: reveal-left;
+      }
+      .reveal-right {
+        animation-name: reveal-right;
+      }
+      .reveal-zoom {
+        animation-name: reveal-zoom;
+      }
+      /* on phones everything simply rises in — no sideways movement */
+      @media (max-width: 767px) {
+        .reveal-left,
+        .reveal-right {
+          animation-name: reveal-up;
+        }
+      }
+    }
+  }
+}

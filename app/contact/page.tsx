@@ -2,6 +2,7 @@ import { Clock, Mail, MapPin, MessageCircle, PhoneCall } from "lucide-react";
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/forms/contact-form";
 import { SectionHeading } from "@/components/home/section-heading";
+import { revealDelay } from "@/lib/reveal";
 import { defaultWhatsappGreeting, site, whatsappUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -71,11 +72,11 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="pb-16 sm:pb-24">
+      <section className="overflow-x-clip pb-16 sm:pb-24">
         <div className="mx-auto grid max-w-6xl gap-8 px-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:px-6">
           <div className="space-y-6">
             <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-              {channels.map((c) => {
+              {channels.map((c, i) => {
                 const Icon = c.icon;
                 const body = (
                   <>
@@ -92,7 +93,7 @@ export default function ContactPage() {
                 const cardClass =
                   "group flex h-full items-start gap-3.5 rounded-xl border border-line bg-white p-4 shadow-card transition";
                 return (
-                  <li key={c.title}>
+                  <li key={c.title} style={revealDelay(i % 2)} className="reveal">
                     {c.href ? (
                       <a
                         href={c.href}
@@ -108,7 +109,7 @@ export default function ContactPage() {
                 );
               })}
             </ul>
-            <div className="overflow-hidden rounded-2xl border border-line shadow-card">
+            <div className="reveal overflow-hidden rounded-2xl border border-line shadow-card">
               <iframe
                 title={`Map of ${site.location.label}`}
                 src={site.location.mapEmbed}
@@ -119,7 +120,7 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-line bg-white p-5 shadow-card sm:p-8 lg:self-start">
+          <div className="reveal-right rounded-2xl border border-line bg-white p-5 shadow-card sm:p-8 lg:self-start">
             <ContactForm />
           </div>
         </div>
