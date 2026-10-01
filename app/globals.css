@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-heading: var(--font-jakarta), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Trust Blue */
+  --color-primary: #1e56a0;
+  --color-primary-hover: #163e75;
+  --color-primary-tint: #ebf3fc;
+
+  /* Healthcare Emerald (accents); -strong carries white text at AA contrast */
+  --color-secondary: #10b981;
+  --color-secondary-hover: #059669;
+  --color-secondary-strong: #047857;
+  --color-secondary-strong-hover: #065f46;
+  --color-secondary-tint: #ecfdf5;
+
+  /* Neutrals */
+  --color-ink: #1e293b;
+  --color-canvas: #f8fafc;
+  --color-line: #e2e8f0;
+  --color-granite: #2c343d;
+
+  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px -12px rgb(15 23 42 / 0.12);
+  --shadow-card-hover: 0 2px 4px rgb(15 23 42 / 0.05), 0 18px 40px -16px rgb(30 86 160 / 0.28);
+
+  --animate-fade-up: fade-up 0.5s ease-out both;
+  --animate-pop: pop 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+  --animate-fade-in: fade-in 0.2s ease-out both;
+  --animate-slide-in: slide-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-in {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: scale(0.85);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-white font-sans text-[15px] leading-relaxed text-ink antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading text-ink;
+    word-spacing: 0.06em;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary;
+  }
+
+  /* Anchors such as #book land below the sticky navbar */
+  [id] {
+    scroll-margin-top: 6rem;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
