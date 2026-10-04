@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crease</title>
+<style>
+  :root{--bg:#1a1424;--panel:#2a2038;--text:#f1ebfa;--dim:#9a8cb5;--c0:#ff6b6b;--c1:#4ecdc4;--c2:#ffd166}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font:16px/1.4 system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:16px;gap:14px}
+  h1{margin:0;letter-spacing:.25em;font-weight:300}
+  .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
+  button{background:var(--panel);color:var(--text);border:1px solid #453760;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer}
+  button:hover{border-color:var(--text)}
+  #msg{color:var(--dim);min-height:1.4em;text-align:center;max-width:480px}
+  #goal{display:flex;gap:10px;align-items:center}
+  #stage{background:var(--panel);border-radius:14px;padding:28px 12px;max-width:100%;overflow-x:auto;width:min(100%,860px)}
+  #strip{display:flex;align-items:center;justify-content:center;min-width:max-content;margin:0 auto}
+  .cell{width:clamp(34px,6vw,52px);aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#0006;transition:transform .35s ease,opacity .35s;position:relative;z-index:1}
+  .cell.paired{outline:3px solid #fff}
+  .cell.moving{z-index:2}
+  .c0{background:var(--c0)}.c1{background:var(--c1)}.c2{background:var(--c2)}
+  .gap{width:clamp(14px,2.4vw,22px);height:clamp(48px,8vw,68px);padding:0;border:0;background:none;position:relative}
+  .gap::after{content:"";position:absolute;left:50%;top:0;bottom:0;border-left:2px dashed #6b5a8c;transform:translateX(-50%)}
+  .gap:hover::after,.gap:focus-visible::after{border-color:#fff;border-left-style:solid}
+  .legend{display:flex;gap:16px;color:var(--dim);font-size:14px;flex-wrap:wrap;justify-content:center}
+  .sw{display:inline-block;width:18px;height:18px;border-radius:5px;vertical-align:-4px;text-align:center;font-size:12px;line-height:18px;color:#0006}
+  #win{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center}
+  #win div{background:var(--panel);padding:28px 36px;border-radius:16px;text-align:center;border:1px solid #fff4}
+</style>
+</head>
+<body>
+<h1>CREASE</h1>
+<div class="row"><button id="prev">◀</button><b id="title"></b><button id="next">▶</button></div>
+<div id="goal"></div>
+<div id="msg"></div>
+<div id="stage"><div id="strip"></div></div>
+<div class="legend" id="legend"></div>
+<div class="row"><span id="folds"></span><button id="hintbtn">Hint (H)</button><button id="undo">Undo (Z)</button><button id="reset">Reset (R)</button></div>
+<div id="win"><div><h2 id="wt"></h2><p id="wm"></p><button id="wn">Next level</button></div></div>
+<script src="engine.js"></script>
+<script src="levels.js"></script>
+<script>
+const C = Crease, $ = id => document.getElementById(id);
+const SYM = ['●', '▲', '■'];
+const sw = c => `<span class="sw c${c}">${SYM[c]}</span>`;
+let idx = +(localStorage.getItem('crease-level') || 0), L, hist, hints, busy = false;
+const best = JSON.parse(localStorage.getItem('crease-best') || '{}');
+const cur = () => hist[hist.length - 1];
+
+$('legend').innerHTML = [[0, 1, 2], [0, 2, 1], [1, 2, 0]].map(([a, b, c]) => `<span>${sw(a)} + ${sw(b)} = ${sw(c)}</span>`).join('') +
+  '<span>same + same = same</span>';
+
+function load(i) {
+  idx = (i + LEVELS.length) % LEVELS.length;
+  try { localStorage.setItem('crease-level', idx); } catch (e) {}
+  L = LEVELS[idx];
+  hist = [L.seq.slice()]; hints = 0; busy = false;
+  $('title').textContent = (idx + 1) + '. ' + L.name;
+  $('goal').innerHTML = 'Fold down to a single ' + sw(L.target);
+  $('msg').textContent = idx === 0 ? 'Click a dashed line to fold the strip there. The shorter side folds over the longer, and cells that meet mix colours.' :
+    idx === 3 ? 'Mixing is not associative: the order of your folds changes the result.' : '';
+  $('win').style.display = 'none';
+  draw();
+}
+function draw() {
+  const s = cur(), strip = $('strip');
+  strip.innerHTML = '';
+  s.forEach((c, i) => {
+    if (i) {
+      const g = document.createElement('button');
+      g.className = 'gap'; g.setAttribute('aria-label', 'fold at line ' + i);
+      g.onclick = () => play(i);
+      g.onmouseenter = g.onfocus = () => pair(i);
+      g.onmouseleave = g.onblur = () => pair(-1);
+      strip.appendChild(g);
+    }
+    const d = document.createElement('div');
+    d.className = 'cell c' + c; d.textContent = SYM[c];
+    strip.appendChild(d);
+  });
+  $('folds').textContent = (hist.length - 1) + ' folds · par ' + L.par + (best[idx] ? ' · best ' + best[idx] : '');
+}
+const cells = () => [...document.querySelectorAll('.cell')];
+function pair(g) {
+  const n = cur().length;
+  cells().forEach((el, i) => el.classList.toggle('paired', g > 0 && 2 * g - 1 - i >= 0 && 2 * g - 1 - i < n));
+}
+function play(g) {
+  if (busy || cur().length === 1) return;
+  const s = cur(), res = C.fold(s, g), els = cells();
+  busy = true; pair(-1);
+  els.forEach((el, i) => {
+    if ((res.moving === 'left') !== (i < g)) return;
+    const m = els[2 * g - 1 - i];
+    el.classList.add('moving');
+    el.style.transform = `translateX(${m.getBoundingClientRect().left - el.getBoundingClientRect().left}px)`;
+  });
+  setTimeout(() => {
+    hist.push(res.seq); busy = false; draw();
+    if (res.seq.length === 1) finish(res.seq[0]);
+  }, 380);
+}
+function finish(c) {
+  const n = hist.length - 1;
+  if (c !== L.target) { $('msg').textContent = 'Wrong colour. Undo or reset and try another fold order.'; return; }
+  if (!best[idx] || n < best[idx]) { best[idx] = n; try { localStorage.setItem('crease-best', JSON.stringify(best)); } catch (e) {} }
+  $('wt').textContent = n <= L.par ? 'Perfect!' : 'Solved!';
+  $('wm').textContent = n + ' folds (par ' + L.par + ')' + (hints ? ' · ' + hints + ' hint' + (hints > 1 ? 's' : '') : '');
+  $('win').style.display = 'flex';
+}
+function undo() { if (busy || hist.length < 2) return; hist.pop(); $('msg').textContent = ''; draw(); }
+function reset() { if (busy) return; hist = [hist[0]]; $('msg').textContent = ''; draw(); }
+function hint() {
+  if (busy || cur().length === 1) return;
+  const p = C.solve(cur(), L.target);
+  if (!p) { $('msg').textContent = 'Dead end: the target is out of reach from here. Undo or reset.'; return; }
+  hints++;
+  $('msg').textContent = `Hint: fold at the highlighted line (${p.length} fold${p.length > 1 ? 's' : ''} left).`;
+  pair(p[0]);
+  document.querySelectorAll('.gap')[p[0] - 1].focus();
+}
+addEventListener('keydown', e => { if (e.key === 'z') undo(); else if (e.key === 'r') reset(); else if (e.key === 'h') hint(); });
+$('undo').onclick = undo; $('reset').onclick = reset; $('hintbtn').onclick = hint;
+$('prev').onclick = () => load(idx - 1); $('next').onclick = () => load(idx + 1); $('wn').onclick = () => load(idx + 1);
+load(idx);
+</script>
+</body>
+</html>
