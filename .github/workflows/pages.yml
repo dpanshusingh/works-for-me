@@ -1,7 +1,7 @@
 name: Deploy Kaleido to GitHub Pages
 on:
   push:
-    branches: [main]
+    branches: [main, ccr-c189ba05-wqdeth]
   workflow_dispatch:
 permissions:
   contents: read
