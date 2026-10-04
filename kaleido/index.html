@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kaleido</title>
+<style>
+  :root{--bg:#14121f;--panel:#1e1b2e;--wall:#37325a;--floor:#241f3a;--you:#ffd166;--shadow:#b388ff;--text:#ece9f7;--dim:#8b86a8}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font:16px/1.4 system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:16px;gap:12px}
+  h1{margin:0;letter-spacing:.2em;font-weight:300}
+  #bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
+  button{background:var(--panel);color:var(--text);border:1px solid var(--wall);border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer}
+  button:hover{border-color:var(--shadow)}
+  #hint{color:var(--dim);max-width:480px;text-align:center;min-height:1.4em}
+  canvas{max-width:100%;border-radius:12px;background:var(--panel);touch-action:none}
+  #ctl{display:grid;grid-template-columns:repeat(3,56px);gap:6px}
+  #ctl button{height:56px;font-size:22px;padding:0}
+  #ctl .u{grid-column:2}
+  #ctl .l{grid-column:1;grid-row:2}#ctl .d{grid-column:2;grid-row:2}#ctl .r{grid-column:3;grid-row:2}
+  #legend{display:flex;gap:16px;color:var(--dim);font-size:14px;flex-wrap:wrap;justify-content:center}
+  #win{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center}
+  #win div{background:var(--panel);padding:28px 36px;border-radius:16px;text-align:center;border:1px solid var(--shadow)}
+</style>
+</head>
+<body>
+<h1>KALEIDO</h1>
+<div id="bar">
+  <button id="prev">◀</button><b id="title"></b><button id="next">▶</button>
+  <span id="moves"></span>
+  <button id="undo">Undo (Z)</button><button id="reset">Reset (R)</button>
+</div>
+<div id="hint"></div>
+<canvas id="c"></canvas>
+<div id="ctl">
+  <button class="u" data-d="0">↑</button><button class="l" data-d="3">←</button>
+  <button class="d" data-d="2">↓</button><button class="r" data-d="1">→</button>
+</div>
+<div id="legend">
+  <span>◧ flips shadow left/right</span><span>◨ flips up/down</span><span>↻ turns shadow's controls 90°</span>
+</div>
+<div id="win"><div><h2 id="wt"></h2><p id="wm"></p><button id="wn">Next level</button></div></div>
+<script src="engine.js"></script>
+<script src="levels.js"></script>
+<script>
+const K = Kaleido, $ = id => document.getElementById(id);
+const cv = $('c'), ctx = cv.getContext('2d'), CELL = 56;
+let idx = +(localStorage.getItem('kaleido-level') || 0), L, hist, anim = 0;
+const best = JSON.parse(localStorage.getItem('kaleido-best') || '{}');
+
+function load(i) {
+  idx = (i + LEVELS.length) % LEVELS.length;
+  try { localStorage.setItem('kaleido-level', idx); } catch (e) {}
+  L = K.parse(LEVELS[idx].rows);
+  hist = [K.start(L)];
+  cv.width = L.w * CELL; cv.height = L.h * CELL;
+  $('title').textContent = (idx + 1) + '. ' + LEVELS[idx].name;
+  $('hint').textContent = LEVELS[idx].hint || '';
+  $('win').style.display = 'none';
+  draw();
+}
+const cur = () => hist[hist.length - 1];
+
+function move(d) {
+  if ($('win').style.display === 'flex') return;
+  const n = K.step(L, cur(), d);
+  if (!n) return;
+  hist.push(n); draw();
+  if (K.won(L, n)) {
+    const moves = hist.length - 1, par = LEVELS[idx].par;
+    if (!best[idx] || moves < best[idx]) { best[idx] = moves; try { localStorage.setItem('kaleido-best', JSON.stringify(best)); } catch (e) {} }
+    $('wt').textContent = moves <= par ? 'Perfect!' : 'Solved!';
+    $('wm').textContent = moves + ' moves (par ' + par + ')';
+    $('win').style.display = 'flex';
+  }
+}
+const undo = () => { if (hist.length > 1) { hist.pop(); draw(); } };
+const reset = () => { hist = [K.start(L)]; draw(); };
+
+function circle(x, y, r, fill, stroke) {
+  ctx.beginPath(); ctx.arc((x + .5) * CELL, (y + .5) * CELL, r, 0, 7);
+  if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+  if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 4; ctx.stroke(); }
+}
+function draw() {
+  const st = cur(), css = getComputedStyle(document.body);
+  const v = n => css.getPropertyValue(n);
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  for (let y = 0; y < L.h; y++) for (let x = 0; x < L.w; x++) {
+    ctx.fillStyle = L.walls[y][x] ? v('--wall') : v('--floor');
+    ctx.fillRect(x * CELL + 1, y * CELL + 1, CELL - 2, CELL - 2);
+    const op = L.ops[x + ',' + y];
+    if (op) {
+      ctx.fillStyle = v('--shadow'); ctx.font = '28px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText({ H: '◧', V: '◨', R: '↻' }[op], (x + .5) * CELL, (y + .5) * CELL + 2);
+    }
+  }
+  circle(L.G[0], L.G[1], 20, null, v('--you'));
+  circle(L.g[0], L.g[1], 20, null, v('--shadow'));
+  circle(st.s[0], st.s[1], 15, v('--shadow') + 'cc');
+  circle(st.p[0], st.p[1], 15, v('--you'));
+  // tick on the shadow showing where your Up key sends it
+  ctx.beginPath(); ctx.moveTo((st.s[0] + .5) * CELL, (st.s[1] + .5) * CELL);
+  const [ux, uy] = [-st.m[1], -st.m[3]]; // shadow's "up"
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+  ctx.lineTo((st.s[0] + .5 + ux * .3) * CELL, (st.s[1] + .5 + uy * .3) * CELL); ctx.stroke();
+  const mv = hist.length - 1;
+  $('moves').textContent = mv + ' moves · par ' + LEVELS[idx].par + (best[idx] ? ' · best ' + best[idx] : '');
+}
+
+addEventListener('keydown', e => {
+  const k = { ArrowUp: 0, w: 0, ArrowRight: 1, d: 1, ArrowDown: 2, s: 2, ArrowLeft: 3, a: 3 }[e.key];
+  if (k !== undefined) { e.preventDefault(); move(k); }
+  else if (e.key === 'z') undo(); else if (e.key === 'r') reset();
+});
+document.querySelectorAll('#ctl button').forEach(b => b.onclick = () => move(+b.dataset.d));
+$('undo').onclick = undo; $('reset').onclick = reset;
+$('prev').onclick = () => load(idx - 1); $('next').onclick = () => load(idx + 1);
+$('wn').onclick = () => load(idx + 1);
+let t0; cv.addEventListener('touchstart', e => t0 = e.touches[0]);
+cv.addEventListener('touchend', e => {
+  const t = e.changedTouches[0], dx = t.clientX - t0.clientX, dy = t.clientY - t0.clientY;
+  if (Math.max(Math.abs(dx), Math.abs(dy)) < 20) return;
+  move(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0));
+});
+load(idx);
+</script>
+</body>
+</html>
