@@ -28,7 +28,7 @@
 <div id="bar">
   <button id="prev">◀</button><b id="title"></b><button id="next">▶</button>
   <span id="moves"></span>
-  <button id="undo">Undo (Z)</button><button id="reset">Reset (R)</button>
+  <button id="hintbtn">Hint (H)</button><button id="undo">Undo (Z)</button><button id="reset">Reset (R)</button>
 </div>
 <div id="hint"></div>
 <canvas id="c"></canvas>
@@ -45,14 +45,14 @@
 <script>
 const K = Kaleido, $ = id => document.getElementById(id);
 const cv = $('c'), ctx = cv.getContext('2d'), CELL = 56;
-let idx = +(localStorage.getItem('kaleido-level') || 0), L, hist, anim = 0;
+let hintDir = null, hints = 0, idx = +(localStorage.getItem('kaleido-level') || 0), L, hist, anim = 0;
 const best = JSON.parse(localStorage.getItem('kaleido-best') || '{}');
 
 function load(i) {
   idx = (i + LEVELS.length) % LEVELS.length;
   try { localStorage.setItem('kaleido-level', idx); } catch (e) {}
   L = K.parse(LEVELS[idx].rows);
-  hist = [K.start(L)];
+  hist = [K.start(L)]; hintDir = null; hints = 0;
   cv.width = L.w * CELL; cv.height = L.h * CELL;
   $('title').textContent = (idx + 1) + '. ' + LEVELS[idx].name;
   $('hint').textContent = LEVELS[idx].hint || '';
@@ -65,17 +65,25 @@ function move(d) {
   if ($('win').style.display === 'flex') return;
   const n = K.step(L, cur(), d);
   if (!n) return;
-  hist.push(n); draw();
+  hist.push(n); hintDir = null; draw();
   if (K.won(L, n)) {
     const moves = hist.length - 1, par = LEVELS[idx].par;
     if (!best[idx] || moves < best[idx]) { best[idx] = moves; try { localStorage.setItem('kaleido-best', JSON.stringify(best)); } catch (e) {} }
     $('wt').textContent = moves <= par ? 'Perfect!' : 'Solved!';
-    $('wm').textContent = moves + ' moves (par ' + par + ')';
+    $('wm').textContent = moves + ' moves (par ' + par + ')' + (hints ? ' · ' + hints + ' hint' + (hints > 1 ? 's' : '') : '');
     $('win').style.display = 'flex';
   }
 }
-const undo = () => { if (hist.length > 1) { hist.pop(); draw(); } };
-const reset = () => { hist = [K.start(L)]; draw(); };
+const undo = () => { if (hist.length > 1) { hist.pop(); hintDir = null; draw(); } };
+const reset = () => { hist = [K.start(L)]; hintDir = null; draw(); };
+function hint() {
+  if (K.won(L, cur())) return;
+  const path = K.solve(L, cur());
+  if (!path) { $('hint').textContent = 'Dead end: no solution from here. Undo or reset.'; return; }
+  hints++; hintDir = path[0];
+  $('hint').textContent = 'Hint: press ' + ['up', 'right', 'down', 'left'][hintDir] + ' (' + path.length + ' moves left)';
+  draw();
+}
 
 function circle(x, y, r, fill, stroke) {
   ctx.beginPath(); ctx.arc((x + .5) * CELL, (y + .5) * CELL, r, 0, 7);
@@ -99,6 +107,13 @@ function draw() {
   circle(L.g[0], L.g[1], 20, null, v('--shadow'));
   circle(st.s[0], st.s[1], 15, v('--shadow') + 'cc');
   circle(st.p[0], st.p[1], 15, v('--you'));
+  if (hintDir !== null) {
+    const [dx, dy] = K.DIRS[hintDir];
+    ctx.strokeStyle = ctx.fillStyle = '#7CFC9A'; ctx.lineWidth = 4; ctx.beginPath();
+    const cx = (st.p[0] + .5) * CELL, cy = (st.p[1] + .5) * CELL;
+    ctx.moveTo(cx + dx * 14, cy + dy * 14); ctx.lineTo(cx + dx * 26, cy + dy * 26); ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx + dx * 26, cy + dy * 26, 5, 0, 7); ctx.fill();
+  }
   // tick on the shadow showing where your Up key sends it
   ctx.beginPath(); ctx.moveTo((st.s[0] + .5) * CELL, (st.s[1] + .5) * CELL);
   const [ux, uy] = [-st.m[1], -st.m[3]]; // shadow's "up"
@@ -111,10 +126,10 @@ function draw() {
 addEventListener('keydown', e => {
   const k = { ArrowUp: 0, w: 0, ArrowRight: 1, d: 1, ArrowDown: 2, s: 2, ArrowLeft: 3, a: 3 }[e.key];
   if (k !== undefined) { e.preventDefault(); move(k); }
-  else if (e.key === 'z') undo(); else if (e.key === 'r') reset();
+  else if (e.key === 'z') undo(); else if (e.key === 'r') reset(); else if (e.key === 'h') hint();
 });
 document.querySelectorAll('#ctl button').forEach(b => b.onclick = () => move(+b.dataset.d));
-$('undo').onclick = undo; $('reset').onclick = reset;
+$('hintbtn').onclick = hint; $('undo').onclick = undo; $('reset').onclick = reset;
 $('prev').onclick = () => load(idx - 1); $('next').onclick = () => load(idx + 1);
 $('wn').onclick = () => load(idx + 1);
 let t0; cv.addEventListener('touchstart', e => t0 = e.touches[0]);

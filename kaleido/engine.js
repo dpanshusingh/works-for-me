@@ -59,8 +59,8 @@
   const key = (st) => st.p + '|' + st.s + '|' + st.m;
 
   // Breadth-first search; returns shortest list of dirs, or null.
-  function solve(L) {
-    const s0 = start(L);
+  function solve(L, s0 = start(L)) {
+    if (won(L, s0)) return [];
     const seen = new Map([[key(s0), null]]);
     let frontier = [s0];
     while (frontier.length) {
