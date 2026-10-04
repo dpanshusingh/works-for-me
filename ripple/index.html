@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ripple</title>
+<style>
+  :root{--bg:#0b1a24;--panel:#12303f;--off:#0f2733;--on:#ffb454;--ring:#5ee1ff;--text:#e6f4fa;--dim:#7fa3b5}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font:16px/1.4 system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;padding:16px;gap:12px}
+  h1{margin:0;letter-spacing:.25em;font-weight:300}
+  .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
+  button{background:var(--panel);color:var(--text);border:1px solid #1f4a5e;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer}
+  button:hover{border-color:var(--ring)}
+  #msg{color:var(--dim);min-height:1.4em;text-align:center;max-width:460px}
+  #board{display:grid;gap:6px;padding:10px;background:var(--panel);border-radius:14px}
+  .c{width:clamp(44px,14vw,70px);aspect-ratio:1;border-radius:10px;border:0;background:var(--off);padding:0;transition:background .25s,box-shadow .25s,transform .25s}
+  .c.on{background:var(--on);box-shadow:0 0 18px #ffb45488}
+  .c.pre{box-shadow:inset 0 0 0 3px var(--ring)}
+  .c.on.pre{box-shadow:inset 0 0 0 3px var(--ring),0 0 18px #ffb45488}
+  .c.pulse{transform:scale(.88)}
+  #queue{display:flex;gap:10px;align-items:center;color:var(--dim);font-size:14px}
+  .mini{display:grid;grid-template-columns:repeat(5,8px);gap:2px}
+  .mini i{width:8px;height:8px;background:var(--off);border-radius:2px}
+  .mini i.k{background:var(--ring)}
+  .mini.next{outline:2px solid var(--ring);outline-offset:4px;border-radius:2px}
+  #win{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center}
+  #win div{background:var(--panel);padding:28px 36px;border-radius:16px;text-align:center;border:1px solid var(--ring)}
+</style>
+</head>
+<body>
+<h1>RIPPLE</h1>
+<div class="row"><button id="prev">◀</button><b id="title"></b><button id="next">▶</button></div>
+<div id="msg"></div>
+<div id="board"></div>
+<div id="queue"><span>Shapes, in order:</span><span class="row" id="mini"></span></div>
+<div class="row"><span id="taps"></span><button id="hintbtn">Hint (H)</button><button id="undo">Undo (Z)</button><button id="reset">Reset (R)</button></div>
+<div id="win"><div><h2 id="wt"></h2><p id="wm"></p><button id="wn">Next level</button></div></div>
+<script src="engine.js"></script>
+<script src="levels.js"></script>
+<script>
+const R = Ripple, $ = id => document.getElementById(id);
+let idx = +(localStorage.getItem('ripple-level') || 0), L, hist, hints;
+const best = JSON.parse(localStorage.getItem('ripple-best') || '{}');
+const board = $('board');
+const cur = () => hist[hist.length - 1];
+
+function load(i) {
+  idx = (i + LEVELS.length) % LEVELS.length;
+  try { localStorage.setItem('ripple-level', idx); } catch (e) {}
+  L = R.parse(LEVELS[idx]);
+  hist = [{ b: L.board, cell: -1 }]; hints = 0;
+  board.style.gridTemplateColumns = `repeat(${L.w},auto)`;
+  board.innerHTML = '';
+  for (let c = 0; c < L.cells; c++) {
+    const b = document.createElement('button');
+    b.className = 'c'; b.setAttribute('aria-label', 'cell ' + (c + 1));
+    b.onclick = () => play(c);
+    b.onmouseenter = b.onfocus = () => preview(c);
+    b.onmouseleave = b.onblur = () => preview(-1);
+    board.appendChild(b);
+  }
+  $('title').textContent = (idx + 1) + '. ' + L.name;
+  $('win').style.display = 'none';
+  $('msg').textContent = idx === 0 ? 'Turn every light off. A tap flips the tapped cell and its 4 neighbours.' :
+    idx === 2 ? 'The shape changes after every tap. Order matters!' : '';
+  draw();
+}
+const taps = () => hist.length - 1;
+const miniFor = kind => {
+  const m = document.createElement('div'); m.className = 'mini';
+  for (let y = -2; y <= 2; y++) for (let x = -2; x <= 2; x++) {
+    const i = document.createElement('i'); if (R.SHAPES[kind](x, y)) i.className = 'k'; m.appendChild(i);
+  }
+  return m;
+};
+function draw() {
+  const b = cur().b;
+  [...board.children].forEach((el, c) => el.classList.toggle('on', !!((b >> c) & 1)));
+  const mini = $('mini'); mini.innerHTML = '';
+  for (let t = 0; t < L.par; t++) {
+    const m = miniFor(R.kindAt(L, t));
+    if (t === taps()) m.classList.add('next'); else if (t < taps()) m.style.opacity = .3;
+    mini.appendChild(m);
+  }
+  $('taps').textContent = taps() + ' / ' + L.par + ' taps' + (best[idx] ? ' · best ' + best[idx] : '');
+  if (b !== 0 && taps() >= L.par) $('msg').textContent = 'Out of taps. Undo or reset.';
+}
+function preview(c) {
+  const m = c < 0 || taps() >= L.par ? 0 : L.masks[R.kindAt(L, taps())][c];
+  [...board.children].forEach((el, i) => el.classList.toggle('pre', !!((m >> i) & 1)));
+}
+function play(c) {
+  if (taps() >= L.par || cur().b === 0) return;
+  const nb = R.tap(L, cur().b, taps(), c);
+  hist.push({ b: nb, cell: c });
+  const el = board.children[c]; el.classList.add('pulse'); setTimeout(() => el.classList.remove('pulse'), 150);
+  if (idx !== 0 || taps() > 0) $('msg').textContent = idx === 0 ? '' : $('msg').textContent;
+  draw(); preview(c);
+  if (nb === 0) {
+    const n = taps();
+    if (!best[idx] || n < best[idx]) { best[idx] = n; try { localStorage.setItem('ripple-best', JSON.stringify(best)); } catch (e) {} }
+    $('wt').textContent = 'Cleared!';
+    $('wm').textContent = n + ' taps' + (hints ? ' · ' + hints + ' hint' + (hints > 1 ? 's' : '') : '');
+    $('win').style.display = 'flex';
+  }
+}
+function undo() { if (hist.length > 1) { hist.pop(); $('msg').textContent = ''; draw(); } }
+function reset() { hist = [hist[0]]; $('msg').textContent = ''; draw(); }
+function hint() {
+  if (cur().b === 0) return;
+  const sol = R.solve(L, cur().b, taps(), L.par - taps());
+  if (!sol) { $('msg').textContent = 'Dead end: not solvable from here. Undo or reset.'; return; }
+  hints++;
+  const c = sol[0], kind = R.kindAt(L, taps());
+  $('msg').textContent = `Hint: tap the highlighted cell (${kind}, ${sol.length} tap${sol.length > 1 ? 's' : ''} left).`;
+  preview(c);
+  board.children[c].focus();
+}
+addEventListener('keydown', e => {
+  if (e.key === 'z') undo(); else if (e.key === 'r') reset(); else if (e.key === 'h') hint();
+});
+$('undo').onclick = undo; $('reset').onclick = reset; $('hintbtn').onclick = hint;
+$('prev').onclick = () => load(idx - 1); $('next').onclick = () => load(idx + 1); $('wn').onclick = () => load(idx + 1);
+load(idx);
+</script>
+</body>
+</html>
