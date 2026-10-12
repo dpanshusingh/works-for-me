@@ -18,3 +18,8 @@ Fold a strip of coloured cells down to a single cell of the target colour. Click
 
 Open `crease/index.html`, or play at https://dpanshusingh.github.io/works-for-me/crease/
 20 solver-verified levels; H hints, Z undo, R reset.
+
+# Audit offer page
+
+`audit/index.html` is a one-page site for a fixed-price AI-code audit service (US market). Edit prices in the pricing section and the contact address in `CONTACT_EMAIL` at the bottom of the file.
+Live at https://dpanshusingh.github.io/works-for-me/audit/
