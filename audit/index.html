@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI-Built App Code Audit | Deepanshu Singh</title>
+<meta name="description" content="A fixed-price, written audit of your AI-built or inherited codebase: security, reliability, performance and a prioritised fix plan, delivered in 3 business days.">
+<style>
+  :root{--bg:#fbfaf7;--card:#fff;--text:#1b1f24;--dim:#5b6570;--line:#e5e2d9;--accent:#1f6feb;--accent-ink:#fff;--warn:#b54708;--soft:#f1efe8}
+  @media (prefers-color-scheme:dark){:root{--bg:#0f1317;--card:#171c22;--text:#eceff3;--dim:#9aa5b1;--line:#27303a;--accent:#5b9dff;--accent-ink:#0b1220;--warn:#f5a25d;--soft:#1b2129}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:17px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}
+  .wrap{max-width:860px;margin:0 auto;padding:0 20px}
+  header{padding:22px 0;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+  header b{font-size:15px;letter-spacing:.02em}
+  a{color:var(--accent)}
+  .btn{display:inline-block;background:var(--accent);color:var(--accent-ink);padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:600}
+  .btn.ghost{background:none;color:var(--accent);border:1px solid var(--accent)}
+  .hero{padding:48px 0 36px}
+  h1{font-size:clamp(30px,6vw,46px);line-height:1.15;margin:0 0 16px;letter-spacing:-.02em}
+  .lead{font-size:20px;color:var(--dim);max-width:640px;margin:0 0 26px}
+  .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .note{font-size:14px;color:var(--dim);margin-top:12px}
+  section{padding:34px 0;border-top:1px solid var(--line)}
+  h2{font-size:26px;margin:0 0 18px;letter-spacing:-.01em}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card h3{margin:0 0 8px;font-size:18px}
+  .card p,.card ul{margin:0;color:var(--dim);font-size:16px}
+  .card ul{padding-left:18px}
+  .price{font-size:34px;font-weight:700;margin:6px 0 2px}
+  .tier.pop{border:2px solid var(--accent)}
+  .tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+  ol.steps{padding-left:20px}
+  ol.steps li{margin-bottom:10px}
+  .sample{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:18px;font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;overflow-x:auto;white-space:pre-wrap}
+  .sev{font-weight:700}.high{color:#d1242f}.med{color:var(--warn)}.low{color:var(--dim)}
+  details{border-bottom:1px solid var(--line);padding:14px 0}
+  summary{cursor:pointer;font-weight:600}
+  details p{color:var(--dim);margin:10px 0 0}
+  footer{padding:30px 0 50px;color:var(--dim);font-size:14px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <b>Deepanshu Singh</b>
+    <a class="btn ghost" id="cta-top" href="#contact">Request an audit</a>
+  </header>
+
+  <div class="hero">
+    <h1>Is your AI-built app safe to ship and cheap to run?</h1>
+    <p class="lead">I review AI-generated or inherited codebases and give you a written, prioritised list of what is risky, what will break at scale, and exactly how to fix it. Fixed price, delivered in 3 business days.</p>
+    <div class="cta">
+      <a class="btn" id="cta-main" href="#contact">Get an audit</a>
+      <a class="btn ghost" href="#sample">See a sample finding</a>
+    </div>
+    <p class="note">Backend and AI engineer, 5 years in FinTech. I have also evaluated and refined 20,000+ lines of AI-generated code (Python, Java, JavaScript, C++, SQL) as a contractor for Scale AI.</p>
+  </div>
+
+  <section>
+    <h2>Who this is for</h2>
+    <div class="grid">
+      <div class="card"><h3>Founders who shipped with AI tools</h3><p>You built an MVP with Cursor, Claude, Copilot or a no-code-to-code tool, and it works. You do not know what is hiding underneath.</p></div>
+      <div class="card"><h3>Teams that inherited a mess</h3><p>An agency or a departed developer left you a codebase nobody fully understands, and you need a plan before spending more.</p></div>
+      <div class="card"><h3>Anyone about to raise, launch or sign a big customer</h3><p>You want a credible third-party review before due diligence, a security questionnaire or a traffic spike.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What I look for</h2>
+    <div class="grid">
+      <div class="card"><h3>Security</h3><ul><li>Leaked secrets and keys</li><li>Auth and authorization gaps</li><li>Injection, XSS, unsafe uploads</li><li>Vulnerable or invented dependencies</li></ul></div>
+      <div class="card"><h3>Reliability</h3><ul><li>Missing error handling and retries</li><li>Race conditions, data-loss paths</li><li>Missing input validation</li><li>Test coverage that matters</li></ul></div>
+      <div class="card"><h3>Performance and cost</h3><ul><li>N+1 queries, missing indexes</li><li>Unbounded loops and memory use</li><li>Cloud spend that will balloon</li></ul></div>
+      <div class="card"><h3>AI-code smells</h3><ul><li>Duplicated and dead logic</li><li>Code that looks right but is wrong</li><li>Inconsistent patterns across files</li></ul></div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <h2>Pricing</h2>
+    <div class="grid">
+      <div class="card tier">
+        <span class="tag">Quick Scan</span>
+        <div class="price">$499</div>
+        <p>For a small app or one service (roughly up to 10k lines).</p>
+        <ul style="margin-top:12px"><li>Top risks, ranked by severity</li><li>Written report (PDF)</li><li>One-page fix plan</li><li>3 business days</li></ul>
+      </div>
+      <div class="card tier pop">
+        <span class="tag">Full Audit</span>
+        <div class="price">$1,200</div>
+        <p>For a real product with users, payments or sensitive data.</p>
+        <ul style="margin-top:12px"><li>Everything in Quick Scan</li><li>Architecture, data and infra review</li><li>Effort estimate for every fix</li><li>45-minute walkthrough call</li><li>7 days of follow-up questions</li></ul>
+      </div>
+      <div class="card tier">
+        <span class="tag">Fix Sprint</span>
+        <div class="price">Quoted</div>
+        <p>Optional, after an audit. I fix the highest-risk issues with you, scoped and priced before any work starts.</p>
+      </div>
+    </div>
+    <p class="note">Half up front, half on delivery. If I find nothing worth reporting, you pay the first half only.</p>
+  </section>
+
+  <section>
+    <h2>How it works</h2>
+    <ol class="steps">
+      <li><b>You email me</b> a link to the repo and 2–3 lines about the product and your main worry.</li>
+      <li><b>You grant read-only access</b> (GitHub or a zip). I sign an NDA first if you ask.</li>
+      <li><b>I review</b> using manual reading plus static analysis and AI-assisted tooling, and I verify each finding myself before it goes in the report.</li>
+      <li><b>You get the report</b> in 3 business days, with every finding explained in plain English and ranked.</li>
+    </ol>
+  </section>
+
+  <section id="sample">
+    <h2>What a finding looks like</h2>
+    <div class="sample">
+<span class="sev high">[HIGH]</span> Payment webhook accepts unsigned requests
+Where: api/webhooks/stripe.py:42
+Why it matters: anyone who finds the URL can mark orders as paid.
+Fix: verify the signature header before parsing the body (about 20 lines).
+Effort: 1 hour. Risk of fix: low.
+
+<span class="sev med">[MED]</span> Orders list runs one query per row
+Where: services/orders.py:88
+Why it matters: page load time grows linearly; 10k orders will time out.
+Fix: join or batch-load line items.
+Effort: 2 hours.
+
+<span class="sev low">[LOW]</span> Three near-identical date helpers
+Where: utils/dates.py, ui/format.js, api/helpers.py
+Fix: consolidate into one module.</div>
+    <p class="note">Illustrative example of the format, not a real client finding.</p>
+  </section>
+
+  <section>
+    <h2>About</h2>
+    <p>I am a backend engineer with five years of experience across Java/Spring microservices, Python, AWS and AI features such as chatbots, OCR-based KYC and computer vision. Most of that was in FinTech, where wrong answers cost money and reviews have to be thorough. Since 2024 I have been reviewing large volumes of AI-written code for model quality, so I know the specific ways it fails.</p>
+  </section>
+
+  <section>
+    <h2>Questions</h2>
+    <details><summary>Do you keep or share my code?</summary><p>No. I use read-only access, do not copy code outside my review environment, and delete local copies after delivery. I am happy to sign an NDA first.</p></details>
+    <details><summary>What stacks do you cover?</summary><p>Strongest in Python, Java/Spring, Node.js and React, SQL and NoSQL databases, Docker and AWS. If your stack is outside that, I will tell you before you pay.</p></details>
+    <details><summary>Is this a penetration test or a compliance certification?</summary><p>No. It is a code and architecture review. It will surface many security issues but it does not replace a pen test or a SOC 2 audit.</p></details>
+    <details><summary>What if you find nothing?</summary><p>Then you have independent evidence your code is in good shape, and you pay only the first half.</p></details>
+    <details><summary>Will you fix the issues too?</summary><p>If you want. The audit stands alone, and a fix sprint is a separate, priced-in-advance scope.</p></details>
+  </section>
+
+  <section id="contact">
+    <h2>Request an audit</h2>
+    <p>Email me a repo link and a few lines about your product. I reply within one business day with a yes or no and a start date.</p>
+    <p><a class="btn" id="mail" href="#">Email Deepanshu</a></p>
+    <p class="note">I am based in India (IST) and work asynchronously with US teams. Calls are available at the start or end of your day.</p>
+  </section>
+
+  <footer>© Deepanshu Singh</footer>
+</div>
+<script>
+  // Change this one value to update every contact link on the page.
+  const CONTACT_EMAIL = 'deepanshu214@gmail.com';
+  const subject = encodeURIComponent('Code audit request');
+  const body = encodeURIComponent('Repo link:\nWhat the product does:\nMain worry:\nTarget launch or deadline:\n');
+  document.getElementById('mail').href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+</script>
+</body>
+</html>
